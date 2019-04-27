@@ -1,0 +1,30 @@
+kayttaja->selain:
+note left of selain
+  kayttaja kirjottaa osoiteriville https://fullstack-exampleapp.herokuapp.com/new_note 
+end note
+
+selain->palvelin: HTTP POST [uusi_note] osoitteeseen https://fullstack-exampleapp.herokuapp.com/new_note 
+palvelin-->selain: status HTTP status 302 Found
+selain->palvelin: HTTP GET https://fullstack-example.now.sh/notes
+palvelin-->selain: HTML-koodi
+selain->palvelin: HTTP GET https://fullstack-example.now.sh/main.css
+palvelin-->selain: main.css
+selain->palvelin: HTTP GET https://fullstack-example.now.sh/main.js
+
+note over selain:
+  selain suorittaa js-koodia
+  joka pyytää JSON-datan palvelimelta
+end note
+
+note left of selain
+ käyttäjä kirjoittaa tekstiä HTML formiin ja painaa enteriä.
+end note
+
+selain->palvelin: POST  https://fullstack-exampleapp.herokuapp.com/new_note
+
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin-->selain: [{"content":"HTML on helppoa","date":"2017-12-10T17:30:31.098Z"}, ...]
+
+note over selain:
+  selain renderöi päivitetyn HTML sivun
+end note
