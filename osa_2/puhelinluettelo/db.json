@@ -9,6 +9,16 @@
       "id": 2,
       "name": "Martti Tienari",
       "number": "040-123456"
+    },
+    {
+      "name": "Eero",
+      "number": "121212",
+      "id": 3
+    },
+    {
+      "id": 4,
+      "name": "Simo",
+      "number": "121"
     }
   ]
 }
