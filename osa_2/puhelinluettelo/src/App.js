@@ -60,9 +60,11 @@ const App = () => {
             setFilteredList(persons.map(person => person.id !== id ? person : updatePerson));
             setNewFilter('');
             setNotificationMessage(`Muutettiin henkilön ${name} puh. numero`)
+            setTimeout(() => { setNotificationMessage(null) }, 4000);
           })
           .catch(error => {
             setErrorMessage(error.response.data.error)
+            setTimeout(() => { setErrorMessage(null) }, 4000);
           });
       }
       setNewName('');
@@ -75,7 +77,7 @@ const App = () => {
           setFilteredList(persons.concat(returnedPerson));
           setPersons(persons.concat(returnedPerson));
           // console.log('-->', filteredList)
-          setNotificationMessage(`Muutettiin henkilön ${name} puhelinnumero`)
+          setNotificationMessage(`Lisättiin henkilön ${name} puhelinnumero`)
           setTimeout(() => { setNotificationMessage(null) }, 4000)
         }).catch(error => {
           setErrorMessage(error.response.data.error)
