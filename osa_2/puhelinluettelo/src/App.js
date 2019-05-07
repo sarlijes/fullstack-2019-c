@@ -59,14 +59,11 @@ const App = () => {
             setPersons(persons.map(person => person.id !== id ? person : updatePerson));
             setFilteredList(persons.map(person => person.id !== id ? person : updatePerson));
             setNewFilter('');
-          }).then(response => {
             setNotificationMessage(`Muutettiin henkilön ${name} puh. numero`)
-            setTimeout(() => { setNotificationMessage(null) }, 3000);
           })
           .catch(error => {
-            setErrorMessage(`Henkilö ${name} oli jo poistettu - päivitä selain ikkuna`)
-            setTimeout(() => { setErrorMessage(null) }, 3000);
-          })
+            setErrorMessage(error.response.data.error)
+          });
       }
       setNewName('');
       setNewNumber('');
@@ -78,12 +75,14 @@ const App = () => {
           setFilteredList(persons.concat(returnedPerson));
           setPersons(persons.concat(returnedPerson));
           // console.log('-->', filteredList)
-          setNewName('')
-          setNewNumber('')
-          setNotificationMessage(`Lisättiin ${name}`)
-          setTimeout(() => { setNotificationMessage(null) }, 3000);
+          setNotificationMessage(`Muutettiin henkilön ${name} puhelinnumero`)
+          setTimeout(() => { setNotificationMessage(null) }, 4000)
+        }).catch(error => {
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => { setErrorMessage(null) }, 4000);
         })
-
+      setNewName('')
+      setNewNumber('')
     }
   };
 
@@ -93,11 +92,11 @@ const App = () => {
         .remove(id)
         .then(response => {
           setNotificationMessage(`${name} poistettiin luettelosta`)
-          setTimeout(() => { setNotificationMessage(null) }, 3000);
+          setTimeout(() => { setNotificationMessage(null) }, 4000);
         })
         .catch(error => {
-          setErrorMessage(`${name} ei löydy luettelosta`)
-          setTimeout(() => { setErrorMessage(null) }, 3000);
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => { setErrorMessage(null) }, 4000);
         })
       setFilteredList(filteredList.filter(person => person.id !== id))
       setPersons(persons.filter(person => person.id !== id));
