@@ -1,5 +1,6 @@
 import axios from 'axios'
 const baseUrl = '/api/persons'
+// for debug use, testing just frontend against Atlas mongoDb
 // const baseUrl = 'https://fathomless-caverns-52918.herokuapp.com/api/persons'
 
 const getAll = () => {

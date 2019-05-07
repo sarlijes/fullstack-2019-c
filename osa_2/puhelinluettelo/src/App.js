@@ -25,9 +25,10 @@ const App = () => {
       });
   }, []);
 
-  useEffect(() => {
-    console.log('', persons);
-  }, [persons])
+  // for debug use
+  // useEffect(() => {
+  //   console.log('', persons);
+  // }, [persons])
 
   const nameChange = event => { setNewName(event.target.value) };
   const numberChange = event => { setNewNumber(event.target.value) };
