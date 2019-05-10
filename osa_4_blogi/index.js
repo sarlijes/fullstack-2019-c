@@ -4,10 +4,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
-
-const dotenv = require('dotenv').config()
-const PORT = process.env.PORT
-const mongoUrl = process.env.MONGODB_URI
+const conn = require('./utils/connection')
 
 const blogSchema = mongoose.Schema({
   title: String,
@@ -18,7 +15,7 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-mongoose.connect(mongoUrl, { useNewUrlParser: true })
+mongoose.connect(conn.mongoUrl, { useNewUrlParser: true })
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -41,6 +38,6 @@ app.post('/api/blogs', (request, response) => {
     })
 })
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+app.listen(conn.PORT, () => {
+  console.log(`Server running on port ${conn.PORT}`)
 })
