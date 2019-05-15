@@ -4,8 +4,9 @@ const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const conn = require('./utils/config')
 
+const dotenv = require('dotenv').config()
+const PORT = process.env.PORT
 const mongoUrl = process.env.MONGODB_URI
 
 const blogSchema = mongoose.Schema({
@@ -40,6 +41,6 @@ app.post('/api/blogs', (request, response) => {
     })
 })
 
-app.listen(conn.PORT, () => {
-  console.log(`Server running on port ${conn.PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
