@@ -8,7 +8,7 @@ const totalLikesOfMany = blogs => {
 
 const mostLikes = blogs =>
   blogs.reduce((favourite, current) =>
-      favourite === null || current.likes > favourite.likes ? current : favourite,null
+    favourite === null || current.likes > favourite.likes ? current : favourite, null
   )
 
 module.exports = {
