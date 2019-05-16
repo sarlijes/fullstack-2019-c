@@ -32,10 +32,10 @@ describe('get all glogs', () => {
 describe('add a valid blog', () => {
   test('a valid blog can be added ', async () => {
     const newBlog = {
-      title: 'Canonical string reduction',
-      author: 'Edsger W. Dijkstra',
-      url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-      likes: 12,
+      title: 'First class tests',
+      author: 'Robert',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+      likes: 10,
     }
 
     await api
@@ -44,16 +44,34 @@ describe('add a valid blog', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-
     const blogsAtEnd = await helper.blogsInDb()
     const response = await api.get('/api/blogs')
     const contents = blogsAtEnd.map(n => n.title)
 
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
-    expect(contents).toContain('Canonical string reduction')
+    expect(contents).toContain('First class tests')
   })
 })
 
-afterAll(() => {
-  mongoose.connection.close()
+describe('try to add a blog without likes count', () => {
+  test('blog without likes count', async () => {
+    const newBlog = ({
+      title: 'About Clean Code',
+      author: 'Robert Jr',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    })
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const lastAddedBlog = blogsAtEnd.length -1
+    const response = await api.get('/api/blogs')
+    expect(response.body[lastAddedBlog].likes).toBe(0)
+  })
+
+  afterAll(() => {
+    mongoose.connection.close()
+  })
 })
