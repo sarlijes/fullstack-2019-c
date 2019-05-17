@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const helper = require('./test_helper')
+const Blog = require('../models/blog')
 
 describe('blogs are returned', () => {
   test('blogs are returned as json', async () => {
@@ -104,6 +105,21 @@ describe('try to add a blog without likes count', () => {
 
       const titles = blogsAtEnd.map(r => r.title)
       expect(titles).not.toContain(blogToDelete.title)
+    })
+  })
+
+  describe('use PUT to edit likes of a blog ', () => {
+    test('amount of likes is updated', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+
+      const updateBlog = {
+        likes: blogToUpdate.likes + 1
+      }
+
+      await api.put(`/api/blogs/${blogToUpdate.id}`).send(updateBlog)
+      const updatedBlog = await Blog.findById(blogToUpdate.id)
+      expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1)
     })
   })
 

@@ -29,4 +29,18 @@ blogsRouter.post('/', async (request, response) => {
   }
 })
 
+blogsRouter.put('/:id', async (request, response) => {
+  const body = await request.body
+
+  if (!body.likes) {
+    response.status(400).send({ error: 'missing likes count' })
+  } else {
+    const blog = {
+      likes: body.likes
+    }
+    const result = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+    response.status(200).json(result)
+  }
+})
+
 module.exports = blogsRouter
