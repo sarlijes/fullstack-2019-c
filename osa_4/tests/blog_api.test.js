@@ -66,9 +66,25 @@ describe('try to add a blog without likes count', () => {
       .expect(201)
 
     const blogsAtEnd = await helper.blogsInDb()
-    const lastAddedBlog = blogsAtEnd.length -1
     const response = await api.get('/api/blogs')
-    expect(response.body[lastAddedBlog].likes).toBe(0)
+    expect(response.body[blogsAtEnd.length - 1].likes).toBe(0)
+  })
+
+  describe('try to add a blog without title and url', () => {
+    test('blog without title & content not added', async () => {
+      const newBlog = {
+        author: 'Robert Jr',
+        likes: 10,
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+
+      const blogsAtEnd = await helper.blogsInDb()
+      expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+    })
   })
 
   afterAll(() => {
