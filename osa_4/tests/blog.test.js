@@ -67,6 +67,6 @@ describe('total likes', () => {
 
 describe('favorite blog', () => {
   test('the most favourite blog', () => {
-    expect(listHelper.mostLikes(blogs)).toEqual(blogs[2])
+    expect(listHelper.mostFavourite(blogs)).toEqual(blogs[2])
   })
 })
