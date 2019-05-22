@@ -8,23 +8,26 @@ usersRouter.get('/', async (request, response) => {
 })
 
 usersRouter.post('/', async (request, response, next) => {
-  try {
-    const body = request.body
+  const body = request.body
+  if (!body.password || body.password.length < 3) {
+    response.status(400).send({ error: 'password should be at least 8 chars' })
+  } else {
+    try {
+      const saltRounds = 10
+      const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(body.password, saltRounds)
+      const user = new User({
+        username: body.username,
+        name: body.name,
+        passwordHash,
+      })
 
-    const user = new User({
-      username: body.username,
-      name: body.name,
-      passwordHash,
-    })
-
-    const savedUser = await user.save()
-
-    response.json(savedUser)
-  } catch (exception) {
-    next(exception)
+      const savedUser = await user.save()
+      response.json(savedUser)
+    } catch (error) {
+      response.status(400).send({ error: error.message })
+      next.error
+    }
   }
 })
 
