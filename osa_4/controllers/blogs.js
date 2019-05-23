@@ -1,12 +1,12 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-blogsRouter.get('/', (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog
+    .find({}).populate('user', { username: 1, name: 1 })
+
+  response.json(blogs.map(blog => blog.toJSON()))
 })
 
 blogsRouter.delete('/:id', async (request, response, next) => {
@@ -18,14 +18,33 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   }
 })
 
-blogsRouter.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
-  if (!blog.title || !blog.url) {
+blogsRouter.post('/', async (request, response, next) => {
+  const body = request.body
+  let user = {}
+  if (!body.userId) {
+    const users = await User.find({})
+    user = users.map(user => user.toJSON())[1]
+    console.log('----->>', user)
+  } else {
+    user = await User.findById(body.userId)
+  }
+
+  if (!body.title || !body.url) {
     response.status(400).send({ error: 'title and url required' })
   } else {
-    if (!blog.likes) blog.likes = 0
-    const result = await blog.save()
-    response.status(201).json(result)
+    const blog = new Blog({
+      author: body.author,
+      title: body.title,
+      url: body.url,
+      user: user._id,
+      likes: typeof body.likes === 'undefined' ? 0 : body.likes
+    })
+    try {
+      const savedBlog = await blog.save()
+      response.status(201).json(savedBlog)
+    } catch (exception) {
+      next(exception)
+    }
   }
 })
 
