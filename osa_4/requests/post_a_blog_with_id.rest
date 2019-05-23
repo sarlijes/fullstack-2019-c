@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9sbGkiLCJpZCI6IjVjZTY3ZjhmMTZhMzJhMzAwY2U2OGQxNSIsImlhdCI6MTU1ODYxNDM0MX0.Jys4EGuj6AWIOwwN9zIzWOgTwWrI2R7zs52fTfFSC60
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im9sbGkiLCJpZCI6IjVjZTY3ZjhmMTZhMzJhMzAwY2U2OGQxNSIsImlhdCI6MTU1ODYyMTE4MH0.5wp-fJS3H05iVQWC6eIQQWcpPoKdWyq-zFOSToKjLkI
 
 {
-	"title": "summer '69",
+	"title": "fishing",
 	"author": "",
 	"url": "www://films.html",
 	"likes": 4
