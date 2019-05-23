@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+
+{
+	"title": "summer",
+	"author": "",
+	"url": "www://maps.html",
+	"likes": 4,
+	"userId": "5ce50b304a7c4021fc643a5c"
+}
