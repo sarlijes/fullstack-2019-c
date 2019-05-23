@@ -1,6 +1,17 @@
 const blogsRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog')
 const User = require('../models/user')
+
+/****** Token */
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -20,31 +31,31 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
-  let user = {}
-  if (!body.userId) {
-    const users = await User.find({})
-    user = users.map(user => user.toJSON())[1]
-    console.log('----->>', user)
-  } else {
-    user = await User.findById(body.userId)
-  }
+  const token = getTokenFrom(request)
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
 
-  if (!body.title || !body.url) {
-    response.status(400).send({ error: 'title and url required' })
-  } else {
-    const blog = new Blog({
-      author: body.author,
-      title: body.title,
-      url: body.url,
-      user: user._id,
-      likes: typeof body.likes === 'undefined' ? 0 : body.likes
-    })
-    try {
+    const user = await User.findById(decodedToken.id)
+
+    if (!body.title || !body.url) {
+      response.status(400).send({ error: 'title and url required' })
+    } else {
+      const blog = new Blog({
+        author: body.author,
+        title: body.title,
+        url: body.url,
+        user: user._id,
+        likes: typeof body.likes === 'undefined' ? 0 : body.likes
+      })
+
       const savedBlog = await blog.save()
       response.status(201).json(savedBlog)
-    } catch (exception) {
-      next(exception)
     }
+  } catch (exception) {
+    next(exception)
   }
 })
 
