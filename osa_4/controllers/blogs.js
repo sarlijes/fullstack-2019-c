@@ -12,8 +12,18 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!request.token || !decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    } else {
+      const blogRemoved = await Blog.findById(request.params.id)
+      if (blogRemoved.user.toString() === decodedToken.id.toString()) {
+        const result = await Blog.findByIdAndRemove(request.params.id)
+        response.status(204).json(result)
+      } else {
+        response.status(400).send({ error: 'allowed only to remove own blogs' })
+      }
+    }
   } catch (exception) {
     next(exception)
   }
@@ -25,13 +35,13 @@ blogsRouter.post('/', async (request, response, next) => {
   try {
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!request.token || !decodedToken.id) {
-      return response.status(401).json({ error: 'Token missing or invalid.' })
+      return response.status(401).json({ error: 'token missing or invalid' })
     }
 
     const user = await User.findById(decodedToken.id)
 
-    if (typeof body.title === 'undefined' || typeof body.url === 'undefined') {
-      response.status(400).send({ error: 'Title and URL must be defined' })
+    if (!body.title || !body.url) {
+      response.status(400).send({ error: 'title and url required' })
     } else {
       const blog = new Blog({
         author: body.author,
