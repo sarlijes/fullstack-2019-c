@@ -71,8 +71,8 @@ describe('favorite blog', () => {
   })
 })
 
-describe('total likes', () => {
-  test('author with most likes', () => {
+describe('most blogs', () => {
+  test('author with most blogs', () => {
     expect(listHelper.mostBlogs(blogs)).toEqual({
       author: 'Robert C. Martin',
       blogs: 3
