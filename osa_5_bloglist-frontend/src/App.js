@@ -18,6 +18,7 @@ const App = () => {
         username, password,
       })
 
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -30,37 +31,49 @@ const App = () => {
     }
   }
 
+  const handleLogout = async (event) => {
+    window.localStorage.removeItem('loggedBlogappUser')
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
 
   if (user === null) {
     return (
       <div>
         <h2>Please log in to App</h2>
         <form onSubmit={handleLogin}>
-        <div>
-        käyttäjätunnus
+          <div>
+            käyttäjätunnus
           <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        salasana
+              type="text"
+              value={username}
+              name="Username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </div>
+          <div>
+            salasana
           <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">kirjaudu</button>
+              type="password"
+              value={password}
+              name="Password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </div>
+          <button type="submit">kirjaudu</button>
         </form>
       </div>
     )
@@ -70,10 +83,15 @@ const App = () => {
       <p>Logged in as {user.name}</p>
       <Notification message={errorMessage} />
       <h2>Blogs</h2>
+      <form onSubmit={handleLogout}>
+      <button type="submit">logout</button>
+    </form>
+    <br></br>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
       ))}
     </div>
+
   )
 }
 
