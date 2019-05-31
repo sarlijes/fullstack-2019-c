@@ -10,6 +10,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [author, setAuthor] = useState('')
+  const [title, setTitle] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -41,6 +44,20 @@ const App = () => {
     )
   }, [])
 
+  const addBlog = async event => {
+    event.preventDefault()
+    let blogObject = {}
+    for (const input of event.target.querySelectorAll('input')) {
+      blogObject[input.name] = input.value
+    }
+
+    const blog = await blogService.create(blogObject)
+    setBlogs(blogs.concat(blog))
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
@@ -58,22 +75,22 @@ const App = () => {
           <div>
             käyttäjätunnus
           <input
-              type="text"
+              type='text'
               value={username}
-              name="Username"
+              name='Username'
               onChange={({ target }) => setUsername(target.value)}
             />
           </div>
           <div>
             salasana
           <input
-              type="password"
+              type='password'
               value={password}
-              name="Password"
+              name='Password'
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type="submit">kirjaudu</button>
+          <button type='submit'>kirjaudu</button>
         </form>
       </div>
     )
@@ -84,14 +101,46 @@ const App = () => {
       <Notification message={errorMessage} />
       <h2>Blogs</h2>
       <form onSubmit={handleLogout}>
-      <button type="submit">logout</button>
-    </form>
-    <br></br>
+        <button type='submit'>logout</button>
+      </form>
+      <h2>Add a New Blog</h2>
+      <div>
+        <form onSubmit={event => addBlog(event)}>
+          <div>
+            title:
+          <input
+              type='text'
+              name='title'
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </div>
+          <div>
+            author:
+          <input
+              type='text'
+              name='author'
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </div>
+          <div>
+            url:
+          <input
+              type='text'
+              name='url'
+              value={url}
+              onChange={({ target }) => setUrl(target.value)}
+            />
+          </div>
+          <button type='submit'>create</button>
+        </form>
+      </div>
+      <br></br>
       {blogs.map(blog => (
         <Blog key={blog.id} blog={blog} />
       ))}
     </div>
-
   )
 }
 
