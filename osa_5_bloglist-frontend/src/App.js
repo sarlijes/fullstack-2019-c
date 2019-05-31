@@ -9,10 +9,25 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -26,7 +41,12 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setErrorMessage('login succeeded')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     } catch (exception) {
+      console.log('*** virheellinen ***')
       setErrorMessage('käyttäjätunnus tai salasana virheellinen')
       setTimeout(() => {
         setErrorMessage(null)
@@ -37,12 +57,6 @@ const App = () => {
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
 
   const addBlog = async event => {
     event.preventDefault()
@@ -57,15 +71,6 @@ const App = () => {
     setAuthor('')
     setUrl('')
   }
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
 
   if (user === null) {
     return (
