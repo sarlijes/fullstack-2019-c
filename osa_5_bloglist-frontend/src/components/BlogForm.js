@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
+import Togglable from '../components/Togglable'
 
 const BlogForm = ({ blogs, setBlogs, alert }) => {
   const [title, setTitle] = useState('')
@@ -19,46 +20,52 @@ const BlogForm = ({ blogs, setBlogs, alert }) => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      alert(`Added a new blog: ${blog.title}`)   
+      alert(`Added a new blog: ${blog.title}`)
     } catch (exception) {
       alert(`${exception.response.data.error}`, true)
     }
   }
 
   return (
-    <div>
-      <form onSubmit={event => addBlog(event)}>
-        <div>
-          title:
+    <Togglable buttonLabel='add'>
+      <div>
+        <form onSubmit={event => addBlog(event)}>
+          {/* <form onSubmit={event => addBlog(event)}> */}
+          <div>
+            title:
       <input
-            type='text'
-            name='title'
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
+              type='text'
+              name='title'
+              value={title}
+              onChange={({ target }) => setTitle(target.value)}
+            />
+          </div>
+          <div>
+            author:
       <input
-            type='text'
-            name='author'
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
+              type='text'
+              name='author'
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+          </div>
+          <div>
+            url:
       <input
-            type='text'
-            name='url'
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <br></br>
+              type='text'
+              name='url'
+              value={url}
+              onChange={({ target }) => setUrl(target.value)}
+            />
+          </div>
+          <br></br>
+          {/* <button type='submit'>create</button> 
+
+        </form> */}
         <button type='submit'>create</button>
-      </form>
-    </div>
+        </form>
+      </div>
+    </Togglable>
   )
 }
 
