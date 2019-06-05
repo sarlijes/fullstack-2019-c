@@ -4,6 +4,7 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -50,55 +51,42 @@ const App = () => {
     }
   }
 
+  const loginForm = () => {
+    return (
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+      />
+    )
+  }
+
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
     alert(`${user.username} logged out`)
     setUser(null)
   }
 
-  if (user === null) {
-    return (
-      <div>
-        <h2>Please log in to App</h2>
-        <Notification notification={notification} />
-        <form onSubmit={handleLogin}>
-          <div>
-            käyttäjätunnus
-          <input
-              type='text'
-              value={username}
-              name='Username'
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            salasana
-          <input
-              type='password'
-              value={password}
-              name='Password'
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type='submit'>kirjaudu</button>
-        </form>
-      </div>
-    )
-  }
   return (
     <div>
-      <h2>Blogs</h2>
-      <Notification notification={notification} />
-      <p>Logged in as {user.name}</p>
-      <button onClick={() => handleLogout()}>logout</button>
-      <br></br>
-      <br></br>
-      <BlogForm blogs={blogs} setBlogs={setBlogs}
-        alert={alert}
-      />
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {user === null ?
+        loginForm() :
+        <div>
+          <h2>Blogs</h2>
+          <Notification notification={notification} />
+          <button onClick={() => handleLogout()}>logout</button>
+          <br></br>
+          <br></br>
+          <BlogForm blogs={blogs} setBlogs={setBlogs}
+            alert={alert}
+          />
+          {blogs.map(blog => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </div>
+      }
     </div>
   )
 }
