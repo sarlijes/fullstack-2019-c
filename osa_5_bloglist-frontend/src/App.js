@@ -12,6 +12,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({})
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -28,10 +29,33 @@ const App = () => {
     }
   }, [])
 
-  const alert = (message, error) => {
+  const notify = (message, error) => {
     setNotification({ message, error })
     setTimeout(() => { setNotification({}) }, 4000);
   }
+
+  // const handleLogin = async (event) => {
+  //   event.preventDefault()
+  //   try {
+  //     const user = await loginService.login({
+  //       username, password,
+  //     })
+  //     window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+  //     blogService.setToken(user.token)
+  //     setUser(user)
+  //     setUsername('')
+  //     setPassword('')
+  //     setErrorMessage('login ok')
+  //     setTimeout(() => {
+  //       setErrorMessage(null)
+  //     }, 5000)
+  //   } catch (exception) {
+  //     setErrorMessage('käyttäjätunnus tai salasana virheellinen')
+  //     setTimeout(() => {
+  //       setErrorMessage(null)
+  //     }, 5000)
+  //   }
+  // }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -40,10 +64,10 @@ const App = () => {
         username, password,
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
-      blogService.setToken(user.token)
       alert(`${username} logged in`)
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
@@ -75,7 +99,7 @@ const App = () => {
         loginForm() :
         <div>
           <h2>Blogs</h2>
-          <Notification notification={notification} />
+          <Notification notification={errorMessage} />
           <button onClick={() => handleLogout()}>logout</button>
           <br></br>
           <br></br>
