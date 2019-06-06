@@ -30,7 +30,6 @@ const BlogForm = ({ blogs, setBlogs, alert }) => {
     <Togglable buttonLabel='add'>
       <div>
         <form onSubmit={event => addBlog(event)}>
-          {/* <form onSubmit={event => addBlog(event)}> */}
           <div>
             title:
       <input
@@ -59,9 +58,6 @@ const BlogForm = ({ blogs, setBlogs, alert }) => {
             />
           </div>
           <br></br>
-          {/* <button type='submit'>create</button> 
-
-        </form> */}
         <button type='submit'>create</button>
         </form>
       </div>

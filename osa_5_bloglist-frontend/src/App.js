@@ -11,8 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({})
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState({})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -30,32 +29,11 @@ const App = () => {
   }, [])
 
   const notify = (message, error) => {
-    setNotification({ message, error })
-    setTimeout(() => { setNotification({}) }, 4000);
+    console.log('*** notify ***:', message)
+    setMessage({ message, error })
+    console.log('---->', message)
+    setTimeout(() => { setMessage({}) }, 4000)
   }
-
-  // const handleLogin = async (event) => {
-  //   event.preventDefault()
-  //   try {
-  //     const user = await loginService.login({
-  //       username, password,
-  //     })
-  //     window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-  //     blogService.setToken(user.token)
-  //     setUser(user)
-  //     setUsername('')
-  //     setPassword('')
-  //     setErrorMessage('login ok')
-  //     setTimeout(() => {
-  //       setErrorMessage(null)
-  //     }, 5000)
-  //   } catch (exception) {
-  //     setErrorMessage('käyttäjätunnus tai salasana virheellinen')
-  //     setTimeout(() => {
-  //       setErrorMessage(null)
-  //     }, 5000)
-  //   }
-  // }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -68,28 +46,30 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      alert(`${username} logged in`)
+      notify(`${username} logged in`)
     } catch (exception) {
-      console.log('käyttäjätunnus tai salasana virheellinen')
+      notify(`käyttäjätunnus tai salasana virheellinen`)
       alert(`${exception.response.data.error}`)
     }
   }
 
   const loginForm = () => {
     return (
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+      />
     )
   }
 
   const handleLogout = async (event) => {
+    console.log('*** handleLogout')
     window.localStorage.removeItem('loggedBlogappUser')
-    alert(`${user.username} logged out`)
+    notify(`logged out`)
+    alert(`${user.name} logged out`)
     setUser(null)
   }
 
@@ -99,7 +79,7 @@ const App = () => {
         loginForm() :
         <div>
           <h2>Blogs</h2>
-          <Notification notification={errorMessage} />
+          <Notification message={message} />
           <button onClick={() => handleLogout()}>logout</button>
           <br></br>
           <br></br>
