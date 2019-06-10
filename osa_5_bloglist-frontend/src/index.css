@@ -19,6 +19,15 @@ code {
   font-size: 15px;
 }
 
+.blogStyle {
+  padding-top: 10;
+  padding-left: 2;
+  margin-right: 300px;
+  border: solid;
+  border-width: 1px;
+  margin-bottom: 5;
+}
+
 .done {
   color: white;
 }
