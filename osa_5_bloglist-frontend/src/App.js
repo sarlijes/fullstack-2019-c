@@ -11,7 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState({})
+  const [notification, setNotification] = useState({})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -29,10 +29,8 @@ const App = () => {
   }, [])
 
   const notify = (message, error) => {
-    console.log('*** notify ***:', message)
-    setMessage({ message, error })
-    console.log('---->', message)
-    setTimeout(() => { setMessage({}) }, 4000)
+    setNotification({ message, error })
+    setTimeout(() => { setNotification({}) }, 4000);
   }
 
   const handleLogin = async (event) => {
@@ -42,56 +40,49 @@ const App = () => {
         username, password,
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
-      notify(`${username} logged in`)
+      blogService.setToken(user.token)
+      notify(`${username} logged in`, true)
     } catch (exception) {
-      notify(`käyttäjätunnus tai salasana virheellinen`)
-      alert(`${exception.response.data.error}`)
+      console.log('käyttäjätunnus tai salasana virheellinen')
+      // notify(`${exception.response.data.error}`, false)
     }
   }
 
-  const loginForm = () => {
-    return (
-      <LoginForm
-        username={username}
-        password={password}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
-        handleSubmit={handleLogin}
-      />
-    )
-  }
-
   const handleLogout = async (event) => {
-    console.log('*** handleLogout')
     window.localStorage.removeItem('loggedBlogappUser')
-    notify(`logged out`)
-    alert(`${user.name} logged out`)
     setUser(null)
   }
 
+  if (user) {
+    return (
+      <div>
+        <h2>Blogs</h2>
+        <Notification notification={notification} />
+        <p>Logged in as {user.name}</p>
+        <button onClick={() => handleLogout()}>logout</button>
+        <br></br>
+        <br></br>
+        <BlogForm blogs={blogs} setBlogs={setBlogs}
+          notify={notify}
+        />
+        {blogs.map(blog => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
+      </div>
+    )
+  }
+
   return (
-    <div>
-      {user === null ?
-        loginForm() :
-        <div>
-          <h2>Blogs</h2>
-          <Notification message={message} />
-          <button onClick={() => handleLogout()}>logout</button>
-          <br></br>
-          <br></br>
-          <BlogForm blogs={blogs} setBlogs={setBlogs}
-            alert={alert}
-          />
-          {blogs.map(blog => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
-        </div>
-      }
-    </div>
+    <LoginForm
+      username={username}
+      password={password}
+      handleUsernameChange={({ target }) => setUsername(target.value)}
+      handlePasswordChange={({ target }) => setPassword(target.value)}
+      handleSubmit={handleLogin}
+    />
   )
 }
 

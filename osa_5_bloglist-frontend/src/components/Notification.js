@@ -1,15 +1,24 @@
 import React from 'react'
+import index from '../index.css'
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null
+const Notification = ({ notification }) => {
+
+  // console.log('Notification ->', notification.error)
+
+  if(notification.error) {
+    return (
+      <div className='true'>
+        {notification.message}
+      </div>
+    )
+  } else if (!notification.error){
+    return (
+      <div className='false'>
+        {notification.message}
+      </div>
+    )
   }
 
-  return (
-    <div>
-      {message.message}
-    </div>
-  )
 }
 
 export default Notification

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import Togglable from '../components/Togglable'
 
-const BlogForm = ({ blogs, setBlogs, alert }) => {
+const BlogForm = ({ blogs, setBlogs, notify }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -20,9 +20,9 @@ const BlogForm = ({ blogs, setBlogs, alert }) => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      alert(`Added a new blog: ${blog.title}`)
+      notify(`Added a new blog: ${blog.title}`, true)
     } catch (exception) {
-      alert(`${exception.response.data.error}`, true)
+      notify(`${exception.response.data.error}`, false)
     }
   }
 
@@ -58,7 +58,7 @@ const BlogForm = ({ blogs, setBlogs, alert }) => {
             />
           </div>
           <br></br>
-        <button type='submit'>create</button>
+          <button type='submit'>create</button>
         </form>
       </div>
     </Togglable>
