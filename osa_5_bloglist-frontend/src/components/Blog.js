@@ -28,10 +28,10 @@ const Blog = ({ blog }) => {
     <div className='blogStyle'>
       <div onClick={toggleVisibility}>
         {blog.title}
-        <br></br> added by: {blog.author}
         <br></br>
         <a href={blog.url}>{blog.url}</a>
         <br></br> {blog.likes} - likes <button onClick={like}>like</button>
+        <br></br> added by: {blog.author}
       </div>
     </div>
   )
