@@ -56,6 +56,11 @@ const App = () => {
     setUser(null)
   }
 
+  const removeBlog = (removedBlog) => {
+    const newBlogs = blogs.filter(blog => blog.id !== removedBlog.id)
+    setBlogs(newBlogs)
+  }
+
   if (user) {
     return (
       <div>
@@ -65,13 +70,15 @@ const App = () => {
         <button onClick={() => handleLogout()}>logout</button>
         <br></br>
         <br></br>
-        <BlogForm blogs={blogs} setBlogs={setBlogs}
+        <BlogForm
+          blogs={blogs}
+          setBlogs={setBlogs}
           notify={notify}
         />
         {blogs
           .sort((a, b) => b.likes - a.likes)
           .map(blog => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} removeBlog={removeBlog} />
           ))}
       </div>
     )

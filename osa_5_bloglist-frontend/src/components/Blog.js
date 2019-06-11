@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import blogAddition from '../services/blogs'
+import blogService from '../services/blogs'
 import index from '../index.css'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, removeBlog }) => {
   const [hidden, setVisible] = useState(false)
 
   const toggleVisibility = () => {
@@ -18,11 +18,23 @@ const Blog = ({ blog }) => {
   const like = async () => {
     blog.likes += 1
     try {
-      blogAddition.update(blog.id, blog)
+      blogService.update(blog.id, blog)
     } catch (error) {
       console.log('error', error)
     }
   }
+
+  const remove = async () => {
+    if (window.confirm(`remove blog ${blog.title}? by ${blog.author}`)) {
+      try {
+        removeBlog(blog)
+        await blogService.remove(blog.id)
+      } catch (error) {
+        console.log('error', error)
+      }
+    }
+  }
+
 
   return (
     <div className='blogStyle'>
@@ -32,6 +44,7 @@ const Blog = ({ blog }) => {
         <a href={blog.url}>{blog.url}</a>
         <br></br> {blog.likes} - likes <button onClick={like}>like</button>
         <br></br> added by: {blog.author}
+        <br></br> <button onClick={remove}>remove</button>
       </div>
     </div>
   )
