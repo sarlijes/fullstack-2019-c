@@ -47,7 +47,6 @@ const App = () => {
       notify(`${username} logged in`, true)
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
-      // notify(`${exception.response.data.error}`, false)
     }
   }
 

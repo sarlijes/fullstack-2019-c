@@ -4,7 +4,7 @@ import index from '../index.css'
 
 const Blog = ({ blog, removeBlog, user }) => {
   const [hidden, setVisible] = useState(false)
-  
+
   const blogOwner = blog.author === user.username
   const buttonShow = { display: blogOwner ? '' : 'none' }
 
@@ -43,11 +43,11 @@ const Blog = ({ blog, removeBlog, user }) => {
     <div className='blogStyle'>
       <div onClick={toggleVisibility}>
         {blog.title}
-        <br></br>
+        <br />
         <a href={blog.url}>{blog.url}</a>
-        <br></br> {blog.likes} - likes <button onClick={like}>like</button>
-        <br></br> added by: {blog.author}
-        <br></br> <button style={buttonShow} onClick={remove}>remove</button>
+        <br />{blog.likes} - likes <button onClick={like}>like</button>
+        <br /> added by: {blog.author}
+        <br /> <button style={buttonShow} onClick={remove}>remove</button>
       </div>
     </div>
   )

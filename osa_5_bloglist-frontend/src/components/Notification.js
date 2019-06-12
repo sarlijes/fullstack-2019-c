@@ -3,8 +3,6 @@ import index from '../index.css'
 
 const Notification = ({ notification }) => {
 
-  // console.log('Notification ->', notification.error)
-
   if(notification.error) {
     return (
       <div className='true'>
