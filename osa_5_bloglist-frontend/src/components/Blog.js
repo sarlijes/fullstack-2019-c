@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import index from '../index.css'
 
-const Blog = ({ blog, removeBlog }) => {
+const Blog = ({ blog, removeBlog, user }) => {
   const [hidden, setVisible] = useState(false)
+  
+  const blogOwner = blog.author === user.username
+  const buttonShow = { display: blogOwner ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!hidden)
@@ -44,7 +47,7 @@ const Blog = ({ blog, removeBlog }) => {
         <a href={blog.url}>{blog.url}</a>
         <br></br> {blog.likes} - likes <button onClick={like}>like</button>
         <br></br> added by: {blog.author}
-        <br></br> <button onClick={remove}>remove</button>
+        <br></br> <button style={buttonShow} onClick={remove}>remove</button>
       </div>
     </div>
   )

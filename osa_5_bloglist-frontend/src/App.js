@@ -67,8 +67,6 @@ const App = () => {
         <h2>Blogs</h2>
         <Notification notification={notification} />
         <p>Logged in as {user.name}</p>
-        <button onClick={() => handleLogout()}>logout</button>
-        <br></br>
         <br></br>
         <BlogForm
           blogs={blogs}
@@ -78,8 +76,10 @@ const App = () => {
         {blogs
           .sort((a, b) => b.likes - a.likes)
           .map(blog => (
-            <Blog key={blog.id} blog={blog} removeBlog={removeBlog} />
+            <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} />
           ))}
+        <br></br>
+        <button onClick={() => handleLogout()}>logout</button>
       </div>
     )
   }
