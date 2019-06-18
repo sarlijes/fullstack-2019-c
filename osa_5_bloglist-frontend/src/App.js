@@ -84,7 +84,7 @@ const App = () => {
   }
 
   return (
-    <LoginForm
+    <LoginForm className='loginform'
       username={username}
       password={password}
       handleUsernameChange={({ target }) => setUsername(target.value)}
