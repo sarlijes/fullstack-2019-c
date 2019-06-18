@@ -41,7 +41,7 @@ const Blog = ({ blog, removeBlog, user }) => {
 
   return (
     <div className='blogStyle'>
-      <div onClick={toggleVisibility}>
+      <div className='toggle' onClick={toggleVisibility}>
         {blog.title}
         <br />
         <a href={blog.url}>{blog.url}</a>

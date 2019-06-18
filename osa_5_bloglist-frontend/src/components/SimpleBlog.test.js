@@ -18,7 +18,7 @@ test('renders content', () => {
   const MyBlog = component.container.querySelector('.MyBlog')
   const Likes = component.container.querySelector('.Likes')
 
-  component.debug()
+  // component.debug()
 
   expect(MyBlog).toHaveTextContent('Komponenttitestaus tapahtuu reactissa')
   expect(MyBlog).toHaveTextContent('Simo')
