@@ -1,9 +1,9 @@
 const blogs = [
   {
-    _id: '5cff9a5ce6647707d8e7aafb',
-    title: 'kesäloma',
-    author: 'olli',
-    url: 'www://kesä/',
+    _id: '5ce966f2788bae43aa8612a8',
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 0,
     __v: 0,
     user: {
@@ -13,21 +13,22 @@ const blogs = [
     }
   },
   {
-    _id: '5d00afb17d66e209f162d151',
-    title: 'lomalla',
-    author: 'simo',
-    url: 'www ',
+    _id: '5ce966f3788bae43aa8612aa',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
     likes: 0,
     __v: 0,
     user: {
       id: '5ce663984a93f01ea59fb796',
-      username: 'owner',
-      name: 'owner'
+      username: 'lasse',
+      name: 'Lasse Mantere'
     }
   }
 ]
 
 const getAll = () => {
+  console.log('**** Mock-blogs *****')
   return Promise.resolve(blogs)
 }
 
