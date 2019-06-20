@@ -39,7 +39,8 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    console.log('*** -->', username.value)
+    console.log('username -->', username.value)
+    console.log('password -->', password.value)
 
     const credentials = {
       username: username.value,
@@ -48,18 +49,16 @@ const App = () => {
 
     try {
       console.log('credentials', credentials)
-      const user = await loginService.login({
+      const user = await loginService.login(
         credentials
-      })
+      )
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       
       setUser(user)
-      // setUsername('')
-      // setPassword('')
+      blogService.setToken(user.token)
+      notify(`${username.value} logged in`, true)
       username.reset()
       password.reset()
-      blogService.setToken(user.token)
-      notify(`${username} logged in`, true)
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
     }
@@ -100,14 +99,8 @@ const App = () => {
 
   return (
     <LoginForm className='loginform'
-      username={username.type}
-      password={password.type}
-
-      // handleUsernameChange={({ target }) => setUsername(target.value)}
-      // handlePasswordChange={({ target }) => setPassword(target.value)}
-      
-      // onChange={username.onChange}
-      // onChange={password.value}
+      username={username}
+      password={password}
 
       handleSubmit={handleLogin}
     />
