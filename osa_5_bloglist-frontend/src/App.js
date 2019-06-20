@@ -5,11 +5,14 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import { useField } from './hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  // const [username, setUsername] = useState('')
+  // const [password, setPassword] = useState('')
+  const username = useField('username')
+  const password = useField('password')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({})
 
@@ -35,14 +38,26 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
+
+    console.log('*** -->', username.value)
+
+    const credentials = {
+      username: username.value,
+      password: password.value
+    }
+
     try {
+      console.log('credentials', credentials)
       const user = await loginService.login({
-        username, password,
+        credentials
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      
       setUser(user)
-      setUsername('')
-      setPassword('')
+      // setUsername('')
+      // setPassword('')
+      username.reset()
+      password.reset()
       blogService.setToken(user.token)
       notify(`${username} logged in`, true)
     } catch (exception) {
@@ -85,10 +100,15 @@ const App = () => {
 
   return (
     <LoginForm className='loginform'
-      username={username}
-      password={password}
-      handleUsernameChange={({ target }) => setUsername(target.value)}
-      handlePasswordChange={({ target }) => setPassword(target.value)}
+      username={username.type}
+      password={password.type}
+
+      // handleUsernameChange={({ target }) => setUsername(target.value)}
+      // handlePasswordChange={({ target }) => setPassword(target.value)}
+      
+      // onChange={username.onChange}
+      // onChange={password.value}
+
       handleSubmit={handleLogin}
     />
   )
