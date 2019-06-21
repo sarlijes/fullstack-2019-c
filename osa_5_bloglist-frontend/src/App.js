@@ -39,8 +39,8 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    console.log('username -->', username.value)
-    console.log('password -->', password.value)
+    // console.log('username -->', username.value)
+    // console.log('password -->', password.value)
 
     const credentials = {
       username: username.value,
@@ -48,7 +48,7 @@ const App = () => {
     }
 
     try {
-      console.log('credentials', credentials)
+      // console.log('credentials', credentials)
       const user = await loginService.login(
         credentials
       )
