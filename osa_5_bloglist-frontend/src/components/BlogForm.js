@@ -4,31 +4,37 @@ import Togglable from '../components/Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
 
-const BlogForm = ({ blogs, setBlogs, notify }) => {
-  const title = useField('title')
-  const author = useField('author')
-  const url = useField('url')
+const BlogForm = ({ setBlogs, notify, blogs }) => {
+  const author = useField('text')
+  const title = useField('text')
+  const url = useField('text')
 
   const addBlog = async event => {
     event.preventDefault()
-    let blogObject = {}
-    for (const input of event.target.querySelectorAll('input')) {
-      blogObject[input.name] = input.value
-    }
+    console.log('author -> ', author)
+    console.log('title -> ', title)
+    console.log('url ->', url)
 
     try {
-      const blog = await blogService.create(blogObject)
-      const newBlog = await blogService.getById(blog.id)
-      setBlogs(blogs.concat(newBlog))
-      notify(`a new blog ${newBlog.title} successfully added`)
+      console.log('luodaan blogi')
+      const response = await blogService.create({
+        newObject: {
+          title: title.value,
+          author: author.value,
+          url: url.value
+        }
+      })
+      console.log('haetaan blogit')
+      const allBlogs = await blogService.getAll()
+      console.log('Haettu kaikki blogit')
+      setBlogs(allBlogs)
+      title.reset()
+      author.reset()
+      url.reset()
+      notify(`a new blog ${response.title} successfully added`)
     } catch (exception) {
       notify(`${exception}`, false)
     }
-  }
-
-  const omitReset = (hook) => {
-    let { reset, ...hookWithoutReset } = hook
-    return hookWithoutReset
   }
 
   return (
@@ -36,24 +42,23 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
       <div>
         <form onSubmit={event => addBlog(event)}>
           <div>
-            title:
-            <input {...omitReset(title)} />
+            author:
+            <input {...author} />
           </div>
           <div>
-            author:
-            <input {...omitReset(author)} />
+            title:
+            <input {...title} />
           </div>
           <div>
             url:
-            <input {...omitReset(url)} />
+            <input {...url} />
           </div>
-          <button type="submit">create</button>
+          <button type="submit">Add</button>
         </form>
       </div>
     </Togglable>
   )
 }
-
 BlogForm.propTypes = {
   blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
