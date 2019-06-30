@@ -55,6 +55,7 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
 }
 
 BlogForm.propTypes = {
+  blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
 }
