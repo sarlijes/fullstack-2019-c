@@ -9,8 +9,6 @@ import { useField } from './hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  // const [username, setUsername] = useState('')
-  // const [password, setPassword] = useState('')
   const username = useField('username')
   const password = useField('password')
   const [user, setUser] = useState(null)
@@ -39,9 +37,6 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    // console.log('username -->', username.value)
-    // console.log('password -->', password.value)
-
     const credentials = {
       username: username.value,
       password: password.value
@@ -57,11 +52,16 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
       notify(`${username.value} logged in`, true)
-      username.reset()
-      password.reset()
+      username.reset('')
+      password.reset('')
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
     }
+  }
+
+  const omitReset = (hook) => {
+    let { reset, ...hookWithoutReset } = hook
+    return hookWithoutReset
   }
 
   const handleLogout = async (event) => {
@@ -99,8 +99,8 @@ const App = () => {
 
   return (
     <LoginForm className='loginform'
-      username={username}
-      password={password}
+      username={omitReset(username)}
+      password={omitReset(password)}
 
       handleSubmit={handleLogin}
     />

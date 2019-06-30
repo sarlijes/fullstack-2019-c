@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import blogService from '../services/blogs'
 import Togglable from '../components/Togglable'
+import PropTypes from 'prop-types'
+import { useField } from '../hooks'
 
 const BlogForm = ({ blogs, setBlogs, notify }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('title')
+  const author = useField('author')
+  const url = useField('url')
 
   const addBlog = async event => {
     event.preventDefault()
@@ -16,14 +18,17 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
 
     try {
       const blog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(blog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      notify(`Added a new blog: ${blog.title}`, true)
+      const newBlog = await blogService.getById(blog.id)
+      setBlogs(blogs.concat(newBlog))
+      notify(`a new blog ${newBlog.title} successfully added`)
     } catch (exception) {
-      notify(`${exception.response.data.error}`, false)
+      notify(`${exception}`, false)
     }
+  }
+
+  const omitReset = (hook) => {
+    let { reset, ...hookWithoutReset } = hook
+    return hookWithoutReset
   }
 
   return (
@@ -32,37 +37,26 @@ const BlogForm = ({ blogs, setBlogs, notify }) => {
         <form onSubmit={event => addBlog(event)}>
           <div>
             title:
-      <input
-              type='text'
-              name='title'
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
+            <input {...omitReset(title)} />
           </div>
           <div>
             author:
-      <input
-              type='text'
-              name='author'
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)}
-            />
+            <input {...omitReset(author)} />
           </div>
           <div>
             url:
-      <input
-              type='text'
-              name='url'
-              value={url}
-              onChange={({ target }) => setUrl(target.value)}
-            />
+            <input {...omitReset(url)} />
           </div>
-          <br></br>
-          <button type='submit'>create</button>
+          <button type="submit">create</button>
         </form>
       </div>
     </Togglable>
   )
+}
+
+BlogForm.propTypes = {
+  setBlogs: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired,
 }
 
 export default BlogForm
