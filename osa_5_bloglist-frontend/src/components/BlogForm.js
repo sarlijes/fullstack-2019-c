@@ -11,12 +11,8 @@ const BlogForm = ({ setBlogs, notify, blogs }) => {
 
   const addBlog = async event => {
     event.preventDefault()
-    console.log('author -> ', author)
-    console.log('title -> ', title)
-    console.log('url ->', url)
 
     try {
-      console.log('luodaan blogi')
       const response = await blogService.create({
         newObject: {
           title: title.value,
@@ -24,14 +20,12 @@ const BlogForm = ({ setBlogs, notify, blogs }) => {
           url: url.value
         }
       })
-      console.log('haetaan blogit')
       const allBlogs = await blogService.getAll()
-      console.log('Haettu kaikki blogit')
       setBlogs(allBlogs)
       title.reset()
       author.reset()
       url.reset()
-      notify(`a new blog ${response.title} successfully added`)
+      notify(`a new blog ${response.title} successfully added`, true)
     } catch (exception) {
       notify(`${exception}`, false)
     }
