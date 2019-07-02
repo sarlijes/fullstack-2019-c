@@ -7,6 +7,18 @@
     {
       "content": "best feature ever <3",
       "id": 2
+    },
+    {
+      "content": "kesäloma",
+      "id": 3
+    },
+    {
+      "content": "hiekkarannat",
+      "id": 4
+    },
+    {
+      "content": "testi part final",
+      "id": 5
     }
   ],
   "persons": [
@@ -14,6 +26,21 @@
       "name": "mluukkai",
       "number": "040-5483923",
       "id": 1
+    },
+    {
+      "name": "lasse",
+      "number": "05002323232",
+      "id": 2
+    },
+    {
+      "name": "simo",
+      "number": "019-2323211",
+      "id": 3
+    },
+    {
+      "name": "ukko",
+      "number": "01000100",
+      "id": 4
     }
   ]
 }
