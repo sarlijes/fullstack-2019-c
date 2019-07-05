@@ -3,7 +3,8 @@ import React from 'react'
 import { votesToAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = ({ store }) => {
-  const anecdotes = store.getState()
+  const anecdotes = store.getState().anecdotes
+  console.log('anecdotes:',anecdotes)
 
   const vote = (id) => {
     store.dispatch(
