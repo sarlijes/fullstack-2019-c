@@ -1,22 +1,23 @@
-const reducer = (state = 'some message', action) => {
-  console.log('stste:', state)
+const reducer = (state = '', action) => {
+  console.log('state:', state)
   console.log('action', action)
 
   switch (action.type) {
     case 'SET_NOTICE':
-      return action.content
+      return action.data.message
+    case 'SET_EMPTY':
+      return ''
     default:
       return state
   }
 }
 
-export const setNotification = content => {
-  return {
-    type: 'SET_NOTICE',
-    data: {
-      content: content
-    }
-  }
+export const newMessage = ( message ) => {
+  return { type: 'SET_NOTICE', data: { message }}
+}
+
+export const emptyMessage = ( message ) => {
+  return { type: 'SET_EMPTY' }
 }
 
 export default reducer
