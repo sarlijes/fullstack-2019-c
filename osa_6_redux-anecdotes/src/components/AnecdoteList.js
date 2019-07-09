@@ -53,9 +53,9 @@ const mapDispatchToProps = {
   newMessage
 }
 
-const ConnectedAnecdoteList = connect(
+const ConnectAnecdoteList = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AnecdoteList)
 
-export default ConnectedAnecdoteList
+export default ConnectAnecdoteList

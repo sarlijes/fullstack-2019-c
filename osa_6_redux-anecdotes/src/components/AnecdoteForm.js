@@ -8,7 +8,7 @@ const AnecdoteForm = (props) => {
     event.preventDefault()
 
     const content = event.target.anecdote.value
-    props.store.dispatch(createAnecdote(content))
+    props.createAnecdote(content)
     props.store.dispatch(newMessage(`You added '${event.target.anecdote.value}'`))
     setTimeout(() => {
       props.store.dispatch(emptyMessage())
@@ -28,4 +28,10 @@ const AnecdoteForm = (props) => {
   )
 }
 
-export default AnecdoteForm
+const mapDispatchToProps = {
+  createAnecdote
+}
+
+const ConnectAnecdoteForm = connect(null, mapDispatchToProps)(AnecdoteForm)
+
+export default ConnectAnecdoteForm

@@ -4,7 +4,7 @@ import { newFilter } from '../reducers/filterReducer';
 
 const Filter = (props) => {
   const handleChange = (event) => {
-    props.store.dispatch(newFilter(event.target.value))
+    props.newFilter(event.target.value)
   }
   const style = {
     marginBottom: 10
@@ -17,4 +17,9 @@ const Filter = (props) => {
   )
 }
 
-export default Filter
+const mapDispatchToProps = {
+  newFilter
+}
+
+const ConnectFilter = connect(null, mapDispatchToProps)(Filter)
+export default ConnectFilter
