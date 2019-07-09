@@ -1,24 +1,18 @@
-const filterReducer = (state = '', action) => {
+const reducer = (state = '', action) => {
+  // console.log('state:', state)
+  console.log('action', action)
 
   switch (action.type) {
-    case 'SET_FILTER':
-      return action.data.filter
-    case 'SET_EMPTY':
+    case 'UPDATE':
+      return action.data
+    case 'RESET':
       return ''
     default:
       return state
   }
 }
 
-export const newFilter = ( filter ) => {
-  return { type: 'SET_FILTER', data: { filter }}
-}
-
-export const emptyFilter = () => {
-  return { type: 'SET_EMPTY' }
-}
-
-export const updateFilter = value => {
+export const newFilter = value => {
   return {
     type: 'UPDATE',
     data: value
@@ -31,4 +25,4 @@ export const resetFilter = () => {
   }
 }
 
-export default filterReducer
+export default reducer
