@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { newFilter } from '../reducers/filterReducer';
 
 const Filter = (props) => {

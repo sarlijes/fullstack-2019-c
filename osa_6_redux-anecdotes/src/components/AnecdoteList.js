@@ -8,8 +8,8 @@ const AnecdoteList = (props) => {
   const filter = props.filter
 
   const vote = (id, anecdote) => {
-    props.store.dispatch(votesToAnecdote(id))
-    props.store.dispatch(newMessage(`you voted '${anecdote}'`))
+    props.votesToAnecdote(id)
+    props.newMessage(`you voted '${anecdote}'`)
     setTimeout(() => {
       props.store.dispatch(emptyMessage())
     }, 3000)
@@ -42,7 +42,6 @@ const AnecdoteList = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  // joskus on hyödyllistä tulostaa mapStateToProps:ista...
   console.log(state)
   return {
     anecdotes: state.anecdotes,
