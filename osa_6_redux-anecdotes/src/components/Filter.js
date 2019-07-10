@@ -21,5 +21,8 @@ const mapDispatchToProps = {
   newFilter
 }
 
-const ConnectFilter = connect(null, mapDispatchToProps)(Filter)
+const ConnectFilter = connect(
+  null, mapDispatchToProps
+  )(Filter)
+
 export default ConnectFilter

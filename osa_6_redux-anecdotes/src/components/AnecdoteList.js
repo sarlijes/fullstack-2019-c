@@ -15,6 +15,12 @@ const AnecdoteList = (props) => {
     }, 3000)
   }
 
+  // const vote = (id) => {
+  //   // props.votesToAnecdote(id)
+  //   const anecdote = props.anecdotes.find(a => a.id === id)
+  //   props.newMessage(`YOU voted '${anecdote.content}'.`)
+  // }
+
   const mostVotes = (a, b) => b.votes - a.votes
 
   const anecdotesToList = anecdote => (
@@ -50,7 +56,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = {
   votesToAnecdote,
-  newMessage
+  newMessage,
+  emptyMessage
 }
 
 const ConnectAnecdoteList = connect(

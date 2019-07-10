@@ -32,6 +32,8 @@ const mapDispatchToProps = {
   createAnecdote
 }
 
-const ConnectAnecdoteForm = connect(null, mapDispatchToProps)(AnecdoteForm)
+const ConnectAnecdoteForm = connect(
+  null, mapDispatchToProps
+  )(AnecdoteForm)
 
 export default ConnectAnecdoteForm
