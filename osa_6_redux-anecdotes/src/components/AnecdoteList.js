@@ -2,10 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { votesToAnecdote } from '../reducers/anecdoteReducer'
 import { newMessage } from '../reducers/notificationReducer';
+import Filter from './Filter'
 
 const AnecdoteList = (props) => {
-  const anecdotes = props.anecdotes
-  const filter = props.filter
 
   const vote = (id, anecdote) => {
     props.votesToAnecdote(id)
@@ -15,37 +14,37 @@ const AnecdoteList = (props) => {
     }, 3000)
   }
 
-  const mostVotes = (a, b) => b.votes - a.votes
-
-  const anecdotesToList = anecdote => (
-    <div key={anecdote.id}>
-      <div>
-        {anecdote.content}
-      </div>
-      <div>
-        has {anecdote.votes}
-        <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
-      </div>
-    </div>
-  )
-
   return (
     <div>
-      {anecdotes
-        .sort(mostVotes)
-        .filter(anecdote =>
-          anecdote.content.toLowerCase().includes(filter.toLowerCase()))
-        .map(anecdote => anecdotesToList(anecdote)
-        )}
+      <Filter />
+      {props.visibleAnecdotes.map(anecdote => (
+        <div key={anecdote.id}>
+          <div>
+            {anecdote.content}
+          </div>
+          <div>
+            has {anecdote.votes}
+            <button onClick={() => vote(anecdote.id)}>vote</button>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
 
+const mostVotes = (a, b) => b.votes - a.votes
+
+const visibleAnecdotes = ({ anecdotes, filter }) => {
+  return anecdotes
+    .sort(mostVotes)
+    .filter(anecdote => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
+}
+
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     anecdotes: state.anecdotes,
-    filter: state.filter
+    filter: state.filter,
+    visibleAnecdotes: visibleAnecdotes(state)
   }
 }
 const mapDispatchToProps = {
