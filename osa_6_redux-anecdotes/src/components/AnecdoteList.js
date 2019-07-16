@@ -6,9 +6,10 @@ import Filter from './Filter'
 
 const AnecdoteList = (props) => {
 
-  const vote = (id, anecdote) => {
+  const vote = (id) => {
     props.votesToAnecdote(id)
-    props.newMessage(`you voted '${anecdote}'`)
+    const votedOne = props.visibleAnecdotes.find(a => a.id === id).content
+    props.newMessage(`you voted '${votedOne}'`)
     setTimeout(() => {
       props.newMessage('')
     }, 3000)
@@ -24,7 +25,7 @@ const AnecdoteList = (props) => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() =>  vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}

@@ -18,7 +18,7 @@ const AnecdoteForm = (props) => {
 
   return (
     <div>
-    <h3>create</h3>
+      <h3>create</h3>
       <form onSubmit={addAnecdote}>
         <input name="anecdote" />
         <button type="submit">add</button>
@@ -28,12 +28,7 @@ const AnecdoteForm = (props) => {
 }
 
 const mapDispatchToProps = {
-  createAnecdote,
-  newMessage
+  createAnecdote, newMessage
 }
 
-const ConnectAnecdoteForm = connect(
-  null, mapDispatchToProps
-  )(AnecdoteForm)
-
-export default ConnectAnecdoteForm
+export default connect(null, mapDispatchToProps)(AnecdoteForm)
