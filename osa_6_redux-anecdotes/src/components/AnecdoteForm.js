@@ -6,9 +6,10 @@ import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = (props) => {
 
-  const addAnecdote = async(event) => {
+  const addAnecdote = async event => {
     event.preventDefault()
     const content = event.target.anecdote.value
+    event.target.anecdote.value = ''
     const newAnecdote = await anecdoteService.createNew(content)
     props.createAnecdote(newAnecdote)
     props.newMessage(`you added '${newAnecdote.content}'`)
@@ -28,8 +29,18 @@ const AnecdoteForm = (props) => {
   )
 }
 
+const mapStateToProps = (state) => {
+  return {
+  }
+}
+
 const mapDispatchToProps = {
   createAnecdote, newMessage
 }
 
-export default connect(null, mapDispatchToProps)(AnecdoteForm)
+const ConnectedAnecdoteForm = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteForm)
+
+export default ConnectedAnecdoteForm
