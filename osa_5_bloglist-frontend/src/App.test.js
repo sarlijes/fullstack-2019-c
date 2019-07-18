@@ -25,12 +25,12 @@ describe('App ', () => {
       token: '5ce663984a93f01ea59fb796'
     }
 
-    localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+    localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
     const component = render(<App />)
 
     component.rerender(<App />)
 
-    await waitForElement(() => component.getByText('Logged in as lasse'))
+    await waitForElement(() => component.getByText(`Logged in as ${user.name}`))
 
     expect(component.container).toHaveTextContent('React patterns')
   })

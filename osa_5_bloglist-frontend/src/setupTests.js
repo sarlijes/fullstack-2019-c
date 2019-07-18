@@ -12,7 +12,7 @@ const localStorageMock = {
 }
 
 window.localStorage = localStorageMock
-// Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+Object.defineProperty(window, 'localStorage', { value: localStorageMock })
 
 const originalError = console.error
 beforeAll(() => {

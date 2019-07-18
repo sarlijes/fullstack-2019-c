@@ -48,7 +48,7 @@ const App = () => {
         credentials
       )
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      
+
       setUser(user)
       blogService.setToken(user.token)
       notify(`${username.value} logged in`, true)
@@ -61,6 +61,7 @@ const App = () => {
 
   const omitReset = (hook) => {
     let { reset, ...hookWithoutReset } = hook
+    // console.log('hookWitoutReset', JSON.stringify(hookWithoutReset))
     return hookWithoutReset
   }
 
@@ -79,7 +80,7 @@ const App = () => {
       <div>
         <h2>Blogs</h2>
         <Notification notification={notification} />
-        <p>Logged in as {user.name}</p>
+        <p>{`Logged in as ${user.name}`}</p>
         <br></br>
         <BlogForm
           blogs={blogs}
