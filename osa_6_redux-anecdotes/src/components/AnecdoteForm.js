@@ -5,7 +5,6 @@ import { newMessage } from '../reducers/notificationReducer'
 import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = (props) => {
-
   const addAnecdote = async event => {
     event.preventDefault()
     const content = event.target.anecdote.value
