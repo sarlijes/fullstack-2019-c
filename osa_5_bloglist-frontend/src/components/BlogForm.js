@@ -4,7 +4,7 @@ import Togglable from '../components/Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
 
-const BlogForm = ({ setBlogs, notify, blogs }) => {
+const BlogForm = ({ setBlogs, notify }) => {
   const author = useField('text')
   const title = useField('text')
   const url = useField('text')
@@ -31,21 +31,26 @@ const BlogForm = ({ setBlogs, notify, blogs }) => {
     }
   }
 
+  const omitReset = (hook) => {
+    let { reset, ...hookWithoutReset } = hook
+    return hookWithoutReset
+  }
+
   return (
     <Togglable buttonLabel='add'>
       <div>
         <form onSubmit={event => addBlog(event)}>
           <div>
             author:
-            <input {...author} />
+            <input {...omitReset(author)} />
           </div>
           <div>
             title:
-            <input {...title} />
+            <input {...omitReset(title)} />
           </div>
           <div>
             url:
-            <input {...url} />
+            <input {...omitReset(url)} />
           </div>
           <button type="submit">Add</button>
         </form>
