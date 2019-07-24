@@ -23,6 +23,10 @@
     {
       "content": "test2",
       "id": 6
+    },
+    {
+      "content": "eka loma",
+      "id": 7
     }
   ],
   "persons": [
@@ -50,6 +54,11 @@
       "name": "lasse",
       "number": "34343",
       "id": 5
+    },
+    {
+      "name": "simo",
+      "number": "343434",
+      "id": 6
     }
   ]
 }

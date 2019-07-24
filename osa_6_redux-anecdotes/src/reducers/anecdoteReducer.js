@@ -32,17 +32,21 @@ export const initializeAnecdote = () => {
       type: 'INITIALIZE',
       data: {
         anecdotes: anecdotes
-     }
+      }
     })
   }
 }
 
 export const createAnecdote = (anecdote) => {
-  return { 
-    type: 'NEW_ANECDOTE', 
-    data: { 
-      anecdote: anecdote }
-    }
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createNew(anecdote)
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: {
+        anecdote: newAnecdote
+      }
+    })
+  }
 }
 
 export default reducer

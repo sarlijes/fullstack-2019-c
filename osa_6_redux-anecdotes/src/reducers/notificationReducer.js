@@ -1,6 +1,6 @@
 const reducer = (state = '', action) => {
   // console.log('state:', state)
-  console.log('action', action)
+  // console.log('action', action)
 
   switch (action.type) {
     case 'SET_NOTICE':
