@@ -16,7 +16,19 @@ const createNew = async (content) => {
   return res.data
 }
 
+const get = async (id) => {
+  const response = await axios.get(`${url}/${id}`)
+  return response.data
+}
+
+const update = async (id, content) => {
+  const response = await axios.put(`${url}/${id}`, content)
+  return response.data
+}
+
 export default {
   getAll,
   createNew,
+  get,
+  update
 }

@@ -1,9 +1,15 @@
 import anecdoteService from '../services/anecdotes'
 
 export const votesToAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+  return async dispatch => {
+    const anecdote = await anecdoteService.get(id)
+    const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 }
+    console.log('updatedAnecdote: votes:', updatedAnecdote)
+    const response = await anecdoteService.update(id, updatedAnecdote)
+    dispatch({
+        type: 'VOTE',
+        data: response
+    })
   }
 }
 
