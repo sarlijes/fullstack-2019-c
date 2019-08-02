@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
@@ -6,13 +7,13 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
+import { setMessage } from './reducers/notificationReducer'
 
-const App = () => {
+const App = (props) => {
   const [blogs, setBlogs] = useState([])
   const username = useField('username')
   const password = useField('password')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -30,8 +31,7 @@ const App = () => {
   }, [])
 
   const notify = (message, error) => {
-    setNotification({ message, error })
-    setTimeout(() => { setNotification({}) }, 4000)
+    props.setMessage({ message, error }, 4)
   }
 
   const handleLogin = async (event) => {
@@ -51,11 +51,12 @@ const App = () => {
 
       setUser(user)
       blogService.setToken(user.token)
-      notify(`${username.value} logged in`, true)
+      notify(`${username.value} logged in`, false)
       username.reset('')
       password.reset('')
     } catch (exception) {
       console.log('käyttäjätunnus tai salasana virheellinen')
+      notify(`${exception.response.data.error}`, true)
     }
   }
 
@@ -67,6 +68,7 @@ const App = () => {
 
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
+    notify(`${user.username} logged out`, false)
     setUser(null)
   }
 
@@ -79,7 +81,7 @@ const App = () => {
     return (
       <div>
         <h2>Blogs</h2>
-        <Notification notification={notification} />
+        <Notification />
         <p>{`Logged in as ${user.name}`}</p>
         <br></br>
         <BlogForm
@@ -99,13 +101,23 @@ const App = () => {
   }
 
   return (
-    <LoginForm className='loginform'
-      username={omitReset(username)}
-      password={omitReset(password)}
+    <div>
+      <Notification />
+      <LoginForm className='loginform'
+        username={omitReset(username)}
+        password={omitReset(password)}
 
-      handleSubmit={handleLogin}
-    />
+        handleSubmit={handleLogin}
+      />
+    </div>
+
   )
 }
 
-export default App
+const mapDispatchToProps = {
+  setMessage
+}
+
+const ConnectApp = connect(null, mapDispatchToProps)(App)
+
+export default ConnectApp

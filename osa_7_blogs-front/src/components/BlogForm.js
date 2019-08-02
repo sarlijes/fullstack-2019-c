@@ -25,9 +25,9 @@ const BlogForm = ({ setBlogs, notify }) => {
       title.reset()
       author.reset()
       url.reset()
-      notify(`a new blog ${response.title} successfully added`, true)
+      notify(`a new blog '${response.title}' successfully added`, false)
     } catch (exception) {
-      notify(`${exception}`, false)
+      notify(`${exception.response.data.error}`, true)
     }
   }
 
