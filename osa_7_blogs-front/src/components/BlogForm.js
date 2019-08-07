@@ -1,34 +1,36 @@
 import React from 'react'
-import blogService from '../services/blogs'
 import Togglable from '../components/Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
+import { connect } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ setBlogs, notify }) => {
-  const author = useField('text')
-  const title = useField('text')
-  const url = useField('text')
+const BlogForm = ({ props, notify }) => {
+  const author = useField('author')
+  const title = useField('title')
+  const url = useField('url')
 
-  const addBlog = async event => {
+  const handleBlogCreation = async event => {
     event.preventDefault()
+    const blogObject = {}
+    for (const input of event.target.querySelectorAll('input')) {
+      blogObject[input.name] = input.value
+      console.log('input', input.value)
+    }
 
     try {
-      const response = await blogService.create({
-        newObject: {
-          title: title.value,
-          author: author.value,
-          url: url.value
-        }
-      })
-      const allBlogs = await blogService.getAll()
-      setBlogs(allBlogs)
+      props.createBlog(blogObject)
+      // notify('a new blog successfully added', false)
+      notify(`a new blog ${blogObject.title} successfully added`)
       title.reset()
       author.reset()
       url.reset()
-      notify(`a new blog '${response.title}' successfully added`, false)
-    } catch (exception) {
-      notify(`${exception.response.data.error}`, true)
+    } catch (error) {
+      // notify(`${exception.response.data.error}`, true)
+      // console.log('error', exception)
+      console.log('error')
     }
+
   }
 
   const omitReset = (hook) => {
@@ -36,10 +38,11 @@ const BlogForm = ({ setBlogs, notify }) => {
     return hookWithoutReset
   }
 
+
   return (
     <Togglable buttonLabel='add'>
       <div>
-        <form onSubmit={event => addBlog(event)}>
+        <form onSubmit={event => handleBlogCreation(event)}>
           <div>
             author:
             <input {...omitReset(author)} />
@@ -58,10 +61,18 @@ const BlogForm = ({ setBlogs, notify }) => {
     </Togglable>
   )
 }
+
 BlogForm.propTypes = {
   blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
 }
 
-export default BlogForm
+
+const mapDispatchToProps = {
+  createBlog
+}
+
+const ConnectedBlogForm = connect(null, mapDispatchToProps)(BlogForm)
+
+export default ConnectedBlogForm

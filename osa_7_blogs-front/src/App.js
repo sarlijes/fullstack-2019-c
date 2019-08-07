@@ -8,6 +8,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
 import { setMessage } from './reducers/notificationReducer'
+import { initBlogs } from './reducers/blogReducer'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
@@ -16,17 +17,21 @@ const App = (props) => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    props.initBlogs()
+    if(window.localStorage.getItem('user') !== null) {
+      setUser(JSON.parse(window.localStorage.getItem('user')))
+    }
+    blogService.getAll().then(blogs => console.log(blogs))
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
+    if (loggedUserJSON !== null) {
       const user = JSON.parse(loggedUserJSON)
+      console.log('--- user logged in! ---', user.name)
       setUser(user)
       blogService.setToken(user.token)
+      props.setMessage(`${user.name} logged on`, 4)
     }
   }, [])
 
@@ -68,7 +73,7 @@ const App = (props) => {
 
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
-    notify(`${user.username} logged out`, false)
+    notify(`${user.username} logged out`, true)
     setUser(null)
   }
 
@@ -80,7 +85,7 @@ const App = (props) => {
   if (user) {
     return (
       <div>
-        <h2>Blogs</h2>
+        <h2>Blogs 2</h2>
         <Notification />
         <p>{`Logged in as ${user.name}`}</p>
         <br></br>
@@ -114,10 +119,17 @@ const App = (props) => {
   )
 }
 
-const mapDispatchToProps = {
-  setMessage
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  }
 }
 
-const ConnectApp = connect(null, mapDispatchToProps)(App)
+const mapDispatchToProps = {
+  setMessage,
+  initBlogs
+}
+
+const ConnectApp = connect(mapStateToProps, mapDispatchToProps)(App)
 
 export default ConnectApp

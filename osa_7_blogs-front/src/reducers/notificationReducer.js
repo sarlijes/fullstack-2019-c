@@ -1,4 +1,6 @@
 const reducer = (state = '', action) => {
+  console.log('action data notificationReducer --->', action.data)
+  console.log('action type', action.type)
   switch (action.type) {
     case 'SET_NOTICE':
       return action.data

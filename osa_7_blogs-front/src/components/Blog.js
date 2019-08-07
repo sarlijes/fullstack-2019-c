@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
-import index from '../index.css'
+import '../index.css'
 
 const Blog = ({ blog, removeBlog, user }) => {
   const [hidden, setVisible] = useState(false)
