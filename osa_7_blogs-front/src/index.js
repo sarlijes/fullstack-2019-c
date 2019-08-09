@@ -2,11 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { Provider } from 'react-redux'
-import store from './store'
+import blogStore from './blogStore'
+// import notificationStore from './notificationStore'
 
 const render = () => {
   ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={blogStore} >
       <App />
     </Provider>,
     document.getElementById('root')
@@ -14,4 +15,4 @@ const render = () => {
 }
 
 render()
-store.subscribe(render)
+blogStore.subscribe(render)

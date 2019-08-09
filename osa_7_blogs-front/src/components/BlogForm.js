@@ -5,21 +5,22 @@ import { useField } from '../hooks'
 import { connect } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ props, notify }) => {
+const BlogForm = ({ notify, createBlog }) => {
   const author = useField('author')
   const title = useField('title')
   const url = useField('url')
 
   const handleBlogCreation = async event => {
     event.preventDefault()
-    const blogObject = {}
-    for (const input of event.target.querySelectorAll('input')) {
-      blogObject[input.name] = input.value
-      console.log('input', input.value)
+    
+    const blogObject = {
+      title: title.value,
+      author: author.value,
+      url: url.value
     }
 
     try {
-      props.createBlog(blogObject)
+      createBlog(blogObject)
       // notify('a new blog successfully added', false)
       notify(`a new blog ${blogObject.title} successfully added`)
       title.reset()
@@ -28,7 +29,7 @@ const BlogForm = ({ props, notify }) => {
     } catch (error) {
       // notify(`${exception.response.data.error}`, true)
       // console.log('error', exception)
-      console.log('error')
+      console.log('error', error)
     }
 
   }

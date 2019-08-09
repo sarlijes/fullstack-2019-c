@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
+import { connect, Provider } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
@@ -8,7 +8,8 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
 import { setMessage } from './reducers/notificationReducer'
-import { initBlogs } from './reducers/blogReducer'
+import { initBlogs, createBlog } from './reducers/blogReducer'
+import notificationStore from './notificationStore'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
@@ -16,9 +17,10 @@ const App = (props) => {
   const password = useField('password')
   const [user, setUser] = useState(null)
 
+
   useEffect(() => {
     props.initBlogs()
-    if(window.localStorage.getItem('user') !== null) {
+    if (window.localStorage.getItem('user') !== null) {
       setUser(JSON.parse(window.localStorage.getItem('user')))
     }
     blogService.getAll().then(blogs => console.log(blogs))
@@ -93,6 +95,7 @@ const App = (props) => {
           blogs={blogs}
           setBlogs={setBlogs}
           notify={notify}
+          createBlog={createBlog}
         />
         {blogs
           .sort((a, b) => b.likes - a.likes)
@@ -107,7 +110,10 @@ const App = (props) => {
 
   return (
     <div>
-      <Notification />
+      <Provider store={notificationStore} >
+        <Notification />
+      </Provider>,
+
       <LoginForm className='loginform'
         username={omitReset(username)}
         password={omitReset(password)}
@@ -117,7 +123,9 @@ const App = (props) => {
     </div>
 
   )
+  // notificationStore.subscribe() // referenssi
 }
+// notificationStore.subscribe() // referenssi
 
 const mapStateToProps = (state) => {
   return {

@@ -7,7 +7,7 @@ const setToken = newToken => {
   token = `bearer ${newToken}`
 }
 
-const create = async ({ newObject }) => {
+const create = async ( newObject ) => {
   const response = await axios({
     method: 'post',
     url: baseUrl,

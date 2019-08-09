@@ -1,8 +1,7 @@
 import blogService from '../services/blogs'
 
 const reducer = (state = [], action) => {
-  console.log('action data blogReducer --->', action.data)
-  console.log(action.type)
+  console.log('action data blogReducer --->', action.type, action.data)
   switch (action.type) {
     case 'NEW_BLOG':
       return [...state, action.data.blogs]
@@ -11,9 +10,9 @@ const reducer = (state = [], action) => {
     default:
       return state
   }
-
 }
 
+// actions
 
 export const initBlogs = () => {
   return async dispatch => {
