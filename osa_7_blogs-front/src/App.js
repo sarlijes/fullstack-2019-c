@@ -27,6 +27,12 @@ const App = (props) => {
   }, [])
 
   useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )
+  }, [])
+
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON !== null) {
       const user = JSON.parse(loggedUserJSON)
@@ -87,7 +93,7 @@ const App = (props) => {
   if (user) {
     return (
       <div>
-        <h2>Blogs 2</h2>
+        <h2>Blogs</h2>
         <Notification />
         <p>{`Logged in as ${user.name}`}</p>
         <br></br>
