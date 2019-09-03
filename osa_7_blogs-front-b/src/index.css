@@ -1,0 +1,49 @@
+body {
+  margin: 5;
+  padding: 5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.person {
+  color: gray;
+  padding-top: 5px;
+  font-size: 15px;
+}
+
+.blogStyle {
+  padding-top: 10;
+  padding-left: 2;
+  margin-right: 300px;
+  border: solid;
+  border-width: 1px;
+  margin-bottom: 5;
+}
+
+.done {
+  color: white;
+}
+
+.false {    
+  border: 'solid';
+  padding: 10;
+  font-size: 25px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: red;
+}
+
+.true {
+  border: 'solid';
+  padding: 10;
+  font-size: 25px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: green;
+}
