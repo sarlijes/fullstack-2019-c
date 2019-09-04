@@ -3,18 +3,17 @@ import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
 import { setMessage } from './reducers/notificationReducer'
 import { initializeBlogs, removeBlog } from './reducers/blogReducer'
+import { loginUser, setUser, logoutUser } from './reducers/userReducer'
 
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
   const username = useField('username')
   const password = useField('password')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     props.initializeBlogs()
@@ -48,19 +47,13 @@ const App = (props) => {
     }
 
     try {
-      const user = await loginService.login(
-        credentials
-      )
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      const user = await props.loginUser(credentials)
+      username.reset()
+      password.reset()
 
-      setUser(user)
-      blogService.setToken(user.token)
-      notify(`${username.value} logged in`, false)
-      username.reset('')
-      password.reset('')
+      notify(`${user.username} successfully logged in`)
     } catch (exception) {
-      console.log('käyttäjätunnus tai salasana virheellinen')
-      notify(`${exception.response.data.error}`, true)
+      notify('wrong username or password', 'error')
     }
   }
 
@@ -69,58 +62,63 @@ const App = (props) => {
     return hookWithoutReset
   }
 
-  const handleLogout = async (event) => {
-    window.localStorage.removeItem('loggedBlogappUser')
-    notify(`${user.username} logged out`, false)
-    setUser(null)
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedUser')
+    notify(`${props.user.username} successfully logged out`, false)
+    props.setUser(null)
+    props.logoutUser()
   }
 
-  if (user) {
+  if (props.user === null) {
     return (
       <div>
-        <h2>Blogs</h2>
         <Notification />
-        <p>{`Logged in as ${user.name}`}</p>
-        <br></br>
-        <BlogForm
-          blogs={blogs}
-          setBlogs={setBlogs}
-          notify={notify}
+        <LoginForm className='loginform'
+          username={omitReset(username)}
+          password={omitReset(password)}
+
+          handleSubmit={handleLogin}
         />
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map(blog => (
-            <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} />
-          ))}
-        <br></br>
-        <button onClick={() => handleLogout()}>logout</button>
       </div>
     )
   }
 
   return (
     <div>
+      <h2>Blogs</h2>
       <Notification />
-      <LoginForm className='loginform'
-        username={omitReset(username)}
-        password={omitReset(password)}
-
-        handleSubmit={handleLogin}
+      <p>{props.user.username} logged in</p>
+      <BlogForm
+        blogs={blogs}
+        setBlogs={setBlogs}
+        notify={notify}
       />
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => (
+          <Blog key={blog.id} blog={blog} user={props.user} removeBlog={removeBlog} />
+        ))}
+      <button onClick={handleLogout}>logout</button>
     </div>
-
   )
 }
 
 const mapStateToProps = state => {
   return {
-    blogs: state.blogs
+    blogs: state.blogs,
+    user: state.user
   }
 }
 
-export default connect(mapStateToProps,
-  {
-    initializeBlogs,
-    removeBlog,
-    setMessage
-  })(App)
+const mapDispatchToProps = {
+  initializeBlogs,
+  removeBlog,
+  setMessage,
+  loginUser,
+  setUser,
+  logoutUser
+}
+
+const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App)
+
+export default ConnectedApp

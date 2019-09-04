@@ -7,6 +7,10 @@ const setToken = newToken => {
   token = `bearer ${newToken}`
 }
 
+const deleteToken = () => {
+  token = null
+}
+
 const create = async ({ newObject }) => {
   const response = await axios({
     method: 'post',
@@ -39,4 +43,4 @@ const remove = (id) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, getById, create, setToken, update, remove }
+export default { getAll, getById, create, setToken, update, remove, deleteToken }
