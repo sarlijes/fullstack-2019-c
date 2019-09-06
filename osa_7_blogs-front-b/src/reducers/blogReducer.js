@@ -4,6 +4,8 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case 'INITIALIZE':
       return action.data
+    case 'CREATE_BLOG':
+      return [...state, action.data]
     case 'LIKE_BLOG':
       return state.map(blog => blog.id !== action.data.id ? blog : action.data)
     case 'REMOVE_BLOG':
@@ -25,6 +27,17 @@ export const initializeBlogs = () => {
         blogs: blogs
       }
     })
+  }
+}
+
+export const createBlog = blog => {
+  return async dispatch => {
+    const createdBlog = await blogService.create(blog)
+    dispatch({
+      type: 'CREATE_BLOG',
+      data: createdBlog
+    })
+    return createdBlog
   }
 }
 
