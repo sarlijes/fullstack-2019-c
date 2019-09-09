@@ -3,8 +3,10 @@ import blogService from '../services/blogs'
 const reducer = (state = [], action) => {
   switch (action.type) {
     case 'INITIALIZE':
-      return action.data
+      console.log('init:', action.data.blogs)
+      return action.data.blogs
     case 'CREATE_BLOG':
+      console.log('add:', action.data.blog)
       return [...state, action.data]
     case 'LIKE_BLOG':
       return state.map(blog => blog.id !== action.data.id ? blog : action.data)
@@ -31,13 +33,13 @@ export const initializeBlogs = () => {
 }
 
 export const createBlog = blog => {
+  console.log('createBlog **************', blog)
   return async dispatch => {
     const createdBlog = await blogService.create(blog)
     dispatch({
       type: 'CREATE_BLOG',
       data: createdBlog
     })
-    return createdBlog
   }
 }
 

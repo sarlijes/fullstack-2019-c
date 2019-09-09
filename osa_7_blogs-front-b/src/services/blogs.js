@@ -11,7 +11,7 @@ const deleteToken = () => {
   token = null
 }
 
-const create = async ({ newObject }) => {
+const create = async (newObject) => {
   const response = await axios({
     method: 'post',
     url: baseUrl,
@@ -20,6 +20,16 @@ const create = async ({ newObject }) => {
   })
   return response.data
 }
+
+// const create = async (newBlog) => {
+//   console.log('> create <', newBlog)
+//   const config = {
+//     headers: { Authorization: token }
+//   }
+
+//   const response = await axios.post(baseUrl, newBlog, config)
+//   return response.data
+// }
 
 const getAll = () => {
   const request = axios.get(baseUrl)

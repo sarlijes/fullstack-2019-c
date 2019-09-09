@@ -1,33 +1,36 @@
 import React from 'react'
-import blogService from '../services/blogs'
+import { connect } from 'react-redux'
+// import blogService from '../services/blogs'
 import Togglable from '../components/Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ setBlogs, notify }) => {
-  const author = useField('text')
-  const title = useField('text')
-  const url = useField('text')
+const BlogForm = props => {
 
-  const addBlog = async event => {
+  const title = useField({ type: 'text', name: 'title' })
+  const author = useField({ type: 'text', name: 'author' })
+  const url = useField({ type: 'text', name: 'url' })
+
+  const handleBlogCreation = async event => {
     event.preventDefault()
+    // visibilityToggleRef.current.toggleVisibility()
+    const blogObject = {
+      title: title.value,
+      author: author.value,
+      url: url.value
+    }
 
     try {
-      const response = await blogService.create({
-        newObject: {
-          title: title.value,
-          author: author.value,
-          url: url.value
-        }
-      })
-      const allBlogs = await blogService.getAll()
-      setBlogs(allBlogs)
+      console.log('handleBlogCreation:', blogObject)
+      props.createBlog(blogObject)
       title.reset()
       author.reset()
       url.reset()
-      notify(`a new blog '${response.title}' successfully added`, false)
+      // blogFormRef.current.toggleVisibility()
+      props.notify(`a new blog ${blogObject.title} successfully added`)
     } catch (exception) {
-      notify(`${exception.response.data.error}`, true)
+      props.notify(`${exception.response.data.error}`, true)
     }
   }
 
@@ -39,7 +42,7 @@ const BlogForm = ({ setBlogs, notify }) => {
   return (
     <Togglable buttonLabel='add'>
       <div>
-        <form onSubmit={event => addBlog(event)}>
+        <form onSubmit={event => handleBlogCreation(event)}>
           <div>
             author:
             <input {...omitReset(author)} />
@@ -52,7 +55,7 @@ const BlogForm = ({ setBlogs, notify }) => {
             url:
             <input {...omitReset(url)} />
           </div>
-          <button type="submit">Add</button>
+          <button type='submit'>Add</button>
         </form>
       </div>
     </Togglable>
@@ -60,8 +63,14 @@ const BlogForm = ({ setBlogs, notify }) => {
 }
 BlogForm.propTypes = {
   blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
+  // setBlogs: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
 }
 
-export default BlogForm
+const mapDispatchToProps = {
+  createBlog
+}
+
+const ConnectedBlogForm = connect(null, mapDispatchToProps)(BlogForm)
+
+export default ConnectedBlogForm

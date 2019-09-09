@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
-import blogService from './services/blogs'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
@@ -19,28 +18,12 @@ const App = ({
   setUser,
   logoutUser
 }) => {
-  // const [blogs, setBlogs] = useState([])
   const username = useField('username')
   const password = useField('password')
 
   useEffect(() => {
     initializeBlogs()
-  }, [])
-
-  // useEffect(() => {
-  //   blogService.getAll().then(blogs =>
-  //     setBlogs(blogs)
-  //   )
-  // })
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+  }, [initializeBlogs])
 
   const notify = (message, error) => {
     setMessage({ message, error }, 4)
@@ -91,9 +74,6 @@ const App = ({
     )
   }
 
-  console.log('------->>>> blogs:', blogs)
-  blogs.sort((a, b) => b.likes - a.likes)
-
   return (
     <div>
       <h2>Blogs</h2>
@@ -103,9 +83,11 @@ const App = ({
         blogs={blogs}
         notify={notify}
       />
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} />
-      ))}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog => (
+          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} />
+        ))}
       <button onClick={handleLogout}>logout</button>
     </div>
   )
