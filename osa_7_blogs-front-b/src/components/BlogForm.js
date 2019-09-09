@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-// import blogService from '../services/blogs'
 import Togglable from '../components/Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
@@ -14,7 +13,6 @@ const BlogForm = props => {
 
   const handleBlogCreation = async event => {
     event.preventDefault()
-    // visibilityToggleRef.current.toggleVisibility()
     const blogObject = {
       title: title.value,
       author: author.value,
@@ -27,7 +25,6 @@ const BlogForm = props => {
       title.reset()
       author.reset()
       url.reset()
-      // blogFormRef.current.toggleVisibility()
       props.notify(`a new blog ${blogObject.title} successfully added`)
     } catch (exception) {
       props.notify(`${exception.response.data.error}`, true)
@@ -63,7 +60,6 @@ const BlogForm = props => {
 }
 BlogForm.propTypes = {
   blogs: PropTypes.array.isRequired,
-  // setBlogs: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
 }
 

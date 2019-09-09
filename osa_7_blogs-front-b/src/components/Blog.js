@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import blogService from '../services/blogs'
 import '../index.css'
-import { likeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, removeBlog, user }) => {
+const Blog = ({ blog, user, likeBlog, notify }) => {
   const [hidden, setVisible] = useState(false)
 
   const blogOwner = blog.author === user.username
@@ -20,27 +19,13 @@ const Blog = ({ blog, removeBlog, user }) => {
     </div>)
   }
 
-  const like = async () => {
-    blog.likes += 1
-    try {
-      blogService.update(blog.id, blog)
-      await likeBlog(blog.id)
-    } catch (error) {
-      console.log('error', error)
-    }
-  }
-
   const remove = async () => {
     if (window.confirm(`remove blog ${blog.title}? by ${blog.author}`)) {
-      try {
-        removeBlog(blog)
-        await blogService.remove(blog.id)
-      } catch (error) {
-        console.log('error', error)
-      }
+      removeBlog(blog)
+      notify(`blog '${blog.title}' removed succesfully`, false)
+      console.log('removed succesfully blog:', blog.title)
     }
   }
-
 
   return (
     <div className='blogStyle'>
@@ -48,7 +33,8 @@ const Blog = ({ blog, removeBlog, user }) => {
         {blog.title}
         <br />
         <a href={blog.url}>{blog.url}</a>
-        <br />{blog.likes} - likes <button onClick={like}>like</button>
+        {blog.likes} - likes
+        <button onClick={() => likeBlog(blog)}>like</button> <br />
         <br /> added by: {blog.author}
         <br /> <button style={buttonShow} onClick={remove}>remove</button>
       </div>
@@ -56,7 +42,17 @@ const Blog = ({ blog, removeBlog, user }) => {
   )
 }
 
-export default connect(
-  null,
-  { likeBlog }
-)(Blog)
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = {
+  likeBlog: likeBlog,
+  removeBlog: removeBlog
+}
+
+const ConnectedBlog = connect(mapStateToProps, mapDispatchToProps)(Blog)
+
+export default ConnectedBlog

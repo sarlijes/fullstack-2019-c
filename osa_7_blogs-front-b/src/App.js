@@ -16,7 +16,7 @@ const App = ({
   setMessage,
   loginUser,
   setUser,
-  logoutUser
+  logoutUser,
 }) => {
   const username = useField('username')
   const password = useField('password')
@@ -86,7 +86,7 @@ const App = ({
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog => (
-          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} />
+          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} notify={notify}/>
         ))}
       <button onClick={handleLogout}>logout</button>
     </div>

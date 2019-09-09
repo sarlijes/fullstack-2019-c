@@ -6,12 +6,12 @@ const reducer = (state = [], action) => {
       console.log('init:', action.data.blogs)
       return action.data.blogs
     case 'CREATE_BLOG':
-      console.log('add:', action.data.blog)
+      console.log('add:', action.data)
       return [...state, action.data]
     case 'LIKE_BLOG':
       return state.map(blog => blog.id !== action.data.id ? blog : action.data)
     case 'REMOVE_BLOG':
-      return state.filter(blog => blog.id !== action.data.id)
+      return state.filter(b => b.id !== action.data)
     default:
       return state
   }
@@ -44,7 +44,7 @@ export const createBlog = blog => {
 }
 
 export const likeBlog = blog => {
-  console.log('**************  reducer likeBlog', blog.user)
+  console.log('**************  reducer likeBlog', blog)
   return async dispatch => {
     const likedBlog = {
       ...blog,
@@ -58,13 +58,24 @@ export const likeBlog = blog => {
   }
 }
 
+// export const removeBlog = blog => {
+//   console.log('**************  reducer removeBlog', blog)
+//   return async dispatch => {
+//     const removedBlog = await blogService.remove(blog)
+//     dispatch({
+//       type: 'REMOVE_BLOG',
+//       data: removedBlog
+//     })
+//   }
+// }
+
 export const removeBlog = blog => {
-  console.log('**************  reducer removeBlog', blog.user)
+  console.log('**************  reducer removeBlog', blog.id)
   return async dispatch => {
-    const removedBlog = await blogService.remove(blog)
+    await blogService.remove(blog.id)
     dispatch({
       type: 'REMOVE_BLOG',
-      data: removedBlog
+      data: blog.id
     })
   }
 }
