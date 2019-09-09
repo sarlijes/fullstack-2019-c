@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import '../index.css'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, user, likeBlog, notify }) => {
+const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
   const [hidden, setVisible] = useState(false)
 
   const blogOwner = blog.author === user.username
@@ -44,7 +44,8 @@ const Blog = ({ blog, user, likeBlog, notify }) => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    blogs: state.blogs
   }
 }
 

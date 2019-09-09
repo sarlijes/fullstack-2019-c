@@ -58,17 +58,6 @@ export const likeBlog = blog => {
   }
 }
 
-// export const removeBlog = blog => {
-//   console.log('**************  reducer removeBlog', blog)
-//   return async dispatch => {
-//     const removedBlog = await blogService.remove(blog)
-//     dispatch({
-//       type: 'REMOVE_BLOG',
-//       data: removedBlog
-//     })
-//   }
-// }
-
 export const removeBlog = blog => {
   console.log('**************  reducer removeBlog', blog.id)
   return async dispatch => {

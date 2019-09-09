@@ -25,7 +25,7 @@ const BlogForm = props => {
       title.reset()
       author.reset()
       url.reset()
-      props.notify(`a new blog ${blogObject.title} successfully added`)
+      props.notify(`a new blog '${blogObject.title}' successfully added`)
     } catch (exception) {
       props.notify(`${exception.response.data.error}`, true)
     }
