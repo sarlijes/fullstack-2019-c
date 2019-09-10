@@ -15,7 +15,6 @@ const userReducer = (state = null, action) => {
 // actions creators
 
 export const setUser = user => {
-  console.log('************ setUser')
   return dispatch => {
     dispatch({
       type: 'LOGIN',
@@ -25,7 +24,6 @@ export const setUser = user => {
 }
 
 export const loginUser = (credentials) => {
-  console.log('*********** userLogin', credentials)
   return async dispatch => {
     const user = await loginService.login(credentials)
     window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
@@ -40,7 +38,6 @@ export const loginUser = (credentials) => {
 
 
 export const logoutUser = () => {
-  console.log('************* userLogout')
   return async dispatch => {
     await blogService.deleteToken()
     window.localStorage.removeItem('loggedBlogAppUser')

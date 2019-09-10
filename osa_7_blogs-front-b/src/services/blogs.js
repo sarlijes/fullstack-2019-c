@@ -12,7 +12,6 @@ const deleteToken = () => {
 }
 
 const create = async (newBlog) => {
-  console.log('> create <', newBlog)
   const config = {
     headers: { Authorization: token }
   }
@@ -31,32 +30,17 @@ const getById = async (id) => {
   return response.data
 }
 
-// const update = (id, data) => {
-//   const config = { headers: { Authorization: token } }
-//   const request = axios.put(`${baseUrl}/${id}`, data, config)
-//   return request.then(response => response.data)
-// }
-
-const update = async (blog) => {
-  const request = await axios.put(`${baseUrl}/${blog.id}`, blog)
-  return request.data
+const update = (blog) => {
+  const request = axios.put(`${baseUrl}/${blog.id}`, blog)
+  return request.then(response => response.data)
 }
-
-// const remove = async id => {
-//   const config = {
-//     headers: { Authorization: token }
-//   }
-//   const request = await axios.delete(`${baseUrl}/${id}`, config)
-//   return request.data
-// }
 
 const remove = async id => {
   const config = {
-    headers: { Authorization: token },
+    headers: { Authorization: token }
   }
-
-  const response = await axios.delete(`${baseUrl}/${id}`, config)
-  return response.data
+  const request = await axios.delete(`${baseUrl}/${id}`, config)
+  return request.data
 }
 
 export default { getAll, getById, create, setToken, update, remove, deleteToken }

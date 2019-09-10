@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import blogService from './services/blogs'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import { useField } from './hooks'
@@ -24,6 +25,15 @@ const App = ({
   useEffect(() => {
     initializeBlogs()
   }, [initializeBlogs])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
 
   const notify = (message, error) => {
     setMessage({ message, error }, 4)

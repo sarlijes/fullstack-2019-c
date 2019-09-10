@@ -7,9 +7,9 @@ import { createBlog } from '../reducers/blogReducer'
 
 const BlogForm = props => {
 
-  const title = useField({ type: 'text', name: 'title' })
-  const author = useField({ type: 'text', name: 'author' })
-  const url = useField({ type: 'text', name: 'url' })
+  const author = useField('author')
+  const title = useField('title')
+  const url = useField('url')
 
   const handleBlogCreation = async event => {
     event.preventDefault()
@@ -20,7 +20,6 @@ const BlogForm = props => {
     }
 
     try {
-      console.log('handleBlogCreation:', blogObject)
       props.createBlog(blogObject)
       title.reset()
       author.reset()

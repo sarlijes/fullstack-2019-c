@@ -23,8 +23,12 @@ const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
     if (window.confirm(`remove blog ${blog.title}? by ${blog.author}`)) {
       removeBlog(blog)
       notify(`blog '${blog.title}' removed succesfully`, false)
-      console.log('removed succesfully blog:', blog.title)
     }
+  }
+
+  const like = async () => {
+    likeBlog(blog)
+    notify(`liked blog '${blog.title}'`, false)
   }
 
   return (
@@ -32,10 +36,9 @@ const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
       <div className='toggle' onClick={toggleVisibility}>
         {blog.title}
         <br />
-        <a href={blog.url}>{blog.url}</a>
-        {blog.likes} - likes
-        <button onClick={() => likeBlog(blog)}>like</button> <br />
-        <br /> added by: {blog.author}
+        <a href={blog.url}>{blog.url}</a><br></br>{blog.likes} - likes
+        <br /> <button onClick={like}>like</button>
+        <br /> added by {blog.author}
         <br /> <button style={buttonShow} onClick={remove}>remove</button>
       </div>
     </div>
