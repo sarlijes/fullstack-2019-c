@@ -58,7 +58,6 @@ const BlogForm = props => {
   )
 }
 BlogForm.propTypes = {
-  blogs: PropTypes.array.isRequired,
   notify: PropTypes.func.isRequired,
 }
 

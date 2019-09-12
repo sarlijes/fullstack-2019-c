@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -9,10 +8,11 @@ import { useField } from './hooks'
 import { setMessage } from './reducers/notificationReducer'
 import { initializeBlogs, removeBlog } from './reducers/blogReducer'
 import { loginUser, setUser, logoutUser } from './reducers/userReducer'
+import BlogList from './components/BlogList'
+import Users from './components/Users'
 
 const App = ({
   user,
-  blogs,
   initializeBlogs,
   setMessage,
   loginUser,
@@ -63,6 +63,8 @@ const App = ({
     return hookWithoutReset
   }
 
+  const blogFormRef = React.createRef()
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
     notify(`${user.username} successfully logged out`, false)
@@ -89,15 +91,15 @@ const App = ({
       <h2>Blogs</h2>
       <Notification />
       <p>{user.username} logged in</p>
-      <BlogForm
-        blogs={blogs}
-        notify={notify}
-      />
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map(blog => (
-          <Blog key={blog.id} blog={blog} user={user} removeBlog={removeBlog} notify={notify}/>
-        ))}
+      <Router>
+        <Route exact path="/" render={() =>
+          <BlogList
+            notify={notify}
+            blogFormRef={blogFormRef}
+          />}
+        />
+        <Route path="/users" render={() => <Users />} />
+      </Router>
       <button onClick={handleLogout}>logout</button>
     </div>
   )
