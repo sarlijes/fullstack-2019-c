@@ -10,14 +10,17 @@ import { initializeBlogs, removeBlog } from './reducers/blogReducer'
 import { loginUser, setUser, logoutUser } from './reducers/userReducer'
 import BlogList from './components/BlogList'
 import Users from './components/Users'
+import User from './components/User'
+import { initializeUsers } from './reducers/usersReducer'
 
 const App = ({
   user,
+  users,
   initializeBlogs,
   setMessage,
   loginUser,
   setUser,
-  logoutUser,
+  logoutUser
 }) => {
   const username = useField('username')
   const password = useField('password')
@@ -27,13 +30,17 @@ const App = ({
   }, [initializeBlogs])
 
   useEffect(() => {
+    initializeUsers()
+  }, [])
+
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [setUser])
 
   const notify = (message, error) => {
     setMessage({ message, error }, 4)
@@ -63,7 +70,7 @@ const App = ({
     return hookWithoutReset
   }
 
-  const blogFormRef = React.createRef()
+  const userId = id => users.find(user => user.id === id)
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
@@ -91,16 +98,18 @@ const App = ({
       <h2>Blogs</h2>
       <Notification />
       <p>{user.username} logged in</p>
+      <button onClick={handleLogout}>logout</button>
       <Router>
         <Route exact path="/" render={() =>
           <BlogList
             notify={notify}
-            blogFormRef={blogFormRef}
           />}
         />
-        <Route path="/users" render={() => <Users />} />
+        <Route exact path="/users" render={({ match }) => <Users path={match.path} />} />
+        <Route path="/users/:id" render={({ match }) =>
+          <User user={userId(match.params.id)} />
+        } />
       </Router>
-      <button onClick={handleLogout}>logout</button>
     </div>
   )
 }
@@ -108,12 +117,14 @@ const App = ({
 const mapStateToProps = state => {
   return {
     blogs: state.blogs,
-    user: state.user
+    user: state.user,
+    users: state.users
   }
 }
 
 const mapDispatchToProps = {
   initializeBlogs,
+  initializeUsers,
   removeBlog,
   setMessage,
   loginUser,

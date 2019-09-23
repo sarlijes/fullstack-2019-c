@@ -1,5 +1,6 @@
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import userService from '../services/users'
 
 const userReducer = (state = null, action) => {
   switch (action.type) {
@@ -7,6 +8,8 @@ const userReducer = (state = null, action) => {
       return action.data
     case 'LOGOUT':
       return null
+    case 'INITIALIZE':
+      return action.data
     default:
       return state
   }
@@ -46,6 +49,16 @@ export const logoutUser = () => {
     })
   }
 
+}
+
+export const initializeUsers = () => {
+  return async dispatch => {
+    const users = await userService.getAll()
+    dispatch({
+      type: 'INITIALIZE',
+      data: users
+    })
+  }
 }
 
 export default userReducer
