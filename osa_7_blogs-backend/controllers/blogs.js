@@ -40,23 +40,21 @@ blogsRouter.post('/', async (request, response, next) => {
 
     const user = await User.findById(decodedToken.id)
 
-    if (!body.title || !body.url) {
-      response.status(400).send({ error: 'title and url required' })
-    } else {
-      const blog = new Blog({
-        author: body.author,
-        title: body.title,
-        url: body.url,
-        user: user._id,
-        likes: typeof body.likes === 'undefined' ? 0 : body.likes
-      })
-      const result = await blog.save()
-      user.blogs = user.blogs.concat(result._id)
-      await user.save()
-      response.status(201).json(result)
-    }
-  } catch (error) {
-    next(error)
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes === undefined ? 0 : body.likes,
+      user: user.id
+    })
+
+    const savedBlog = await blog.save()
+    const populatedBlog = await Blog.findById(savedBlog._id).populate('user', { username: 1, name: 1, id: 1 })
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+    response.status(201).json(populatedBlog)
+  } catch (exception) {
+    next(exception)
   }
 })
 
