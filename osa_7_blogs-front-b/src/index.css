@@ -47,3 +47,19 @@ code {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   color: green;
 }
+
+.blogStyle2 {
+  padding-top: 10;
+  background: lightgray;
+  margin-bottom: 5;
+}
+
+.menuStyle {
+  padding-top: 10;
+  background: lightgray;
+  margin-bottom: 5;
+}
+
+.linkStyle {
+  padding: 1;
+}

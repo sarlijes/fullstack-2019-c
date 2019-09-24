@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Link } from 'react-router-dom'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -11,7 +11,9 @@ import { loginUser, setUser, logoutUser } from './reducers/userReducer'
 import BlogList from './components/BlogList'
 import Users from './components/Users'
 import User from './components/User'
-import { initializeUsers } from './reducers/usersReducer'
+import { initializeUsers } from './reducers/userReducer'
+import Blog from './components/Blog'
+import './index.css'
 
 const App = ({
   user,
@@ -20,14 +22,15 @@ const App = ({
   setMessage,
   loginUser,
   setUser,
-  logoutUser
+  logoutUser,
+  blogs
 }) => {
   const username = useField('username')
   const password = useField('password')
 
   useEffect(() => {
     initializeBlogs()
-  }, [initializeBlogs])
+  }, [])
 
   useEffect(() => {
     initializeUsers()
@@ -40,7 +43,7 @@ const App = ({
       setUser(user)
       blogService.setToken(user.token)
     }
-  }, [setUser])
+  }, [])
 
   const notify = (message, error) => {
     setMessage({ message, error }, 4)
@@ -71,6 +74,7 @@ const App = ({
   }
 
   const userId = id => users.find(user => user.id === id)
+  const blogId = id => blogs.find(blog => blog.id === id)
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
@@ -95,20 +99,26 @@ const App = ({
 
   return (
     <div>
-      <h2>Blogs</h2>
-      <Notification />
-      <p>{user.username} logged in</p>
-      <button onClick={handleLogout}>logout</button>
       <Router>
+        <div className='menuStyle'>
+          <Link to="/">blogs</Link>{' '}
+          <Link to="/users">users</Link>
+          {' '}{user.username} logged in {' '}
+          <button onClick={handleLogout}>logout</button>
+        </div>
+        <h2>Blog App</h2>
+        <Notification />
+        <p>{user.username} logged in</p>
+        <button onClick={handleLogout}>logout</button>
         <Route exact path="/" render={() =>
           <BlogList
             notify={notify}
           />}
         />
         <Route exact path="/users" render={({ match }) => <Users path={match.path} />} />
-        <Route path="/users/:id" render={({ match }) =>
-          <User user={userId(match.params.id)} />
-        } />
+        <Route path="/users/:id" render={({ match }) => <User user={userId(match.params.id)} />} />
+        <Route exact path="/blogs/:id" render={({ match }) => <Blog notify={notify} blog={blogId(match.params.id)} />} />
+        <Redirect to="/" />
       </Router>
     </div>
   )

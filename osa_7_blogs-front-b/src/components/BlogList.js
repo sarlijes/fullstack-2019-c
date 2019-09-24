@@ -1,9 +1,10 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import BlogForm from './BlogForm'
-import Blog from './Blog'
+import '../index.css'
 
-const BlogList = ({ notify, sortedBlogs }) => {
+const BlogList = ({ notify, sortBlogs }) => {
 
   const blogForm = () => (
     <BlogForm
@@ -14,24 +15,22 @@ const BlogList = ({ notify, sortedBlogs }) => {
   return (
     <div>
       {blogForm()}
-      {sortedBlogs.map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          notify={notify}
-        />
+      {sortBlogs.map(blog =>
+        <div className='blogStyle' key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </div>
       )}
     </div>
   )
 
 }
 
-const sortedBlogs = blogs => blogs.sort((a, b) => b.likes - a.likes)
+const sortBlogs = blogs => blogs.sort((a, b) => b.likes - a.likes)
 
 const mapStateToPros = state => {
   return {
     blogs: state.blogs,
-    sortedBlogs: sortedBlogs(state.blogs)
+    sortBlogs: sortBlogs(state.blogs)
   }
 }
 

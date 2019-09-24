@@ -8,7 +8,7 @@ const userReducer = (state = null, action) => {
       return action.data
     case 'LOGOUT':
       return null
-    case 'INITIALIZE':
+    case 'INIT':
       return action.data
     default:
       return state
@@ -55,7 +55,7 @@ export const initializeUsers = () => {
   return async dispatch => {
     const users = await userService.getAll()
     dispatch({
-      type: 'INITIALIZE',
+      type: 'INIT',
       data: users
     })
   }

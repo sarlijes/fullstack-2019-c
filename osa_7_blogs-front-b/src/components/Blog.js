@@ -6,6 +6,8 @@ import { likeBlog, removeBlog } from '../reducers/blogReducer'
 const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
   const [hidden, setVisible] = useState(false)
 
+  if (blog === undefined) return null
+
   const blogOwner = blog.author === user.username
   const buttonShow = { display: blogOwner ? '' : 'none' }
 

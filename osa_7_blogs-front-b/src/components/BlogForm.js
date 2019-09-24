@@ -40,12 +40,12 @@ const BlogForm = props => {
       <div>
         <form onSubmit={event => handleBlogCreation(event)}>
           <div>
-            author:
-            <input {...omitReset(author)} />
-          </div>
-          <div>
             title:
             <input {...omitReset(title)} />
+          </div>
+          <div>
+            author:
+            <input {...omitReset(author)} />
           </div>
           <div>
             url:
