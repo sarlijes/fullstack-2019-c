@@ -4,6 +4,7 @@ import Togglable from '../components/Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
 import { createBlog } from '../reducers/blogReducer'
+import { Form } from 'semantic-ui-react'
 
 const BlogForm = props => {
 
@@ -38,21 +39,21 @@ const BlogForm = props => {
   return (
     <Togglable buttonLabel='add'>
       <div>
-        <form onSubmit={event => handleBlogCreation(event)}>
-          <div>
-            title:
+        <Form onSubmit={event => handleBlogCreation(event)}>
+          <Form.Field>
+            <label>title</label>
             <input {...omitReset(title)} />
-          </div>
-          <div>
-            author:
+          </Form.Field>
+          <Form.Field>
+            <label>author</label>
             <input {...omitReset(author)} />
-          </div>
-          <div>
-            url:
+          </Form.Field>
+          <Form.Field>
+            <label>url</label>
             <input {...omitReset(url)} />
-          </div>
+          </Form.Field>
           <button type='submit'>Add</button>
-        </form>
+        </Form>
       </div>
     </Togglable>
   )

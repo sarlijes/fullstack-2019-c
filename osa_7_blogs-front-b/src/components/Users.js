@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { initializeUsers } from '../reducers/usersReducer'
+import { Header, Table } from 'semantic-ui-react'
 
 const Users = props => {
   useEffect(() => {
@@ -19,15 +20,16 @@ const Users = props => {
 
   return (
     <div>
-      <h2>Users </h2>
-      <table>
+      <br></br>
+      <Header>Users </Header>
+      <Table>
         <tbody>
           <tr>
             <th></th><th>blogs created</th>
           </tr>
           {users}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }
