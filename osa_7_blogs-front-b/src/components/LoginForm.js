@@ -10,15 +10,15 @@ const LoginForm = ({ handleSubmit, username, password }) => {
 
         <div>
           username
-          <input {...username} />
+          <input id="username" {...username} />
         </div>
 
         <div>
           password
-          <input {...password} />
+          <input id="password" {...password} />
         </div>
 
-        <button type="submit">login</button>
+        <button type="submit" data-cy="login">login</button>
       </form>
     </div>
   )

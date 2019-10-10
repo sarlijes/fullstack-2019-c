@@ -8,7 +8,7 @@ const Comment = props => {
 
   const comment = useField('comment')
   const handleComment = () => {
-    console.log('id: comment value:', props.blog.id, comment.value)
+    // console.log('id: comment value:', props.blog.id, comment.value)
     props.addComment(props.blog.id, comment.value)
     comment.reset()
   }
@@ -23,8 +23,8 @@ const Comment = props => {
   return (
     <div>
       <h3>comments</h3>
-      <input { ...comment } />
-      <button onClick={handleComment}>add comment</button>
+      <input id="commentInput"{ ...comment } />
+      <button id="addComment" onClick={handleComment}>add comment</button>
       <ul>{comments}</ul>
     </div>
   )

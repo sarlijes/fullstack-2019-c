@@ -42,17 +42,17 @@ const BlogForm = props => {
         <Form onSubmit={event => handleBlogCreation(event)}>
           <Form.Field>
             <label>title</label>
-            <input {...omitReset(title)} />
+            <input id="title" data-cy="title" {...omitReset(title)} />
           </Form.Field>
           <Form.Field>
             <label>author</label>
-            <input {...omitReset(author)} />
+            <input id="author" data-cy="author" {...omitReset(author)} />
           </Form.Field>
           <Form.Field>
             <label>url</label>
-            <input {...omitReset(url)} />
+            <input id="url" data-cy="url" {...omitReset(url)} />
           </Form.Field>
-          <button type='submit'>Add</button>
+          <button type='submit' data-cy="Add">Add</button>
         </Form>
       </div>
     </Togglable>

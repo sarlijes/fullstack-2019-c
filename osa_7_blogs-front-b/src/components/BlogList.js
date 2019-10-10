@@ -17,7 +17,7 @@ const BlogList = ({ notify, sortBlogs }) => {
       {blogForm()}
       {sortBlogs.map(blog =>
         <div className='blogStyle' key={blog.id}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          <Link id="blogsList" to={`/blogs/${blog.id}`}>{blog.title}</Link>
         </div>
       )}
     </div>

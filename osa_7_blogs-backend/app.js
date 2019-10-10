@@ -23,6 +23,14 @@ app.use(bodyParser.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/tests')
+  app.use('/api/tests', testingRouter)
+  console.log('process.env.NODE_ENV is now set to:', process.env.NODE_ENV)
+} else {
+  console.log('process.env.NODE_ENV is now set to:', process.env.NODE_ENV)
+}
+
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)

@@ -77,7 +77,7 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.post('/:id/comments', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
-  console.log('body -->', blog)
+  // console.log('body -->', blog)
 
   if (!blog) {
     return response.status(400).send({ error: 'no blog on that id' }).end()
@@ -85,7 +85,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
 
   const comment = new Comment(request.body)
   comment.blog = blog._id
-  console.log('comment --->', comment)
+  // console.log('comment --->', comment)
 
   const savedComment = await comment.save()
   blog.comments = blog.comments.concat(savedComment._id)

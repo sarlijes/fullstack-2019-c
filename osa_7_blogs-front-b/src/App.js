@@ -105,15 +105,14 @@ const App = ({
       <div>
         <Router>
           <div className='menuStyle'>
-            <Link to="/">blogs</Link>{' '}
-            <Link to="/users">users</Link>
+            <Link to="/" id="blogs" data-cy="blogs" >blogs</Link>{' '}
+            <Link to="/users" id="users" data-cy="users">users</Link>
             {' '}{user.username} logged in {' '}
-            <button onClick={handleLogout}>logout</button>
+            <button data-cy="logout" onClick={handleLogout}>logout</button>
           </div>
           <h2>Blog app</h2>
           <Notification />
-          <p>{user.username} logged in</p>
-          <button onClick={handleLogout}>logout</button>
+          <button data-cy="logout" onClick={handleLogout}>logout</button>
           <Route exact path="/" render={() =>
             <BlogList
               notify={notify}

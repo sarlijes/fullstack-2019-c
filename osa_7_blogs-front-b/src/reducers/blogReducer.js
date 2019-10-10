@@ -12,11 +12,11 @@ const reducer = (state = [], action) => {
       return state.filter(b => b.id !== action.data)
     case 'ADD_COMMENT': {
       const newState = JSON.parse(JSON.stringify(state))
-      console.log('newState', newState)
+      // console.log('newState', newState)
       const newBlog = newState.find(blog => blog.id === action.data.blog)
-      console.log('newBlog', newBlog)
+      // console.log('newBlog', newBlog)
       newBlog.comments = newBlog.comments.concat({ comment: action.data.comment, id: action.data.id })
-      console.log('new comment', newBlog.comments)
+      // console.log('new comment', newBlog.comments)
       return [...newState.filter(blog => blog.id !== newBlog.id), newBlog]
     }
     default:
