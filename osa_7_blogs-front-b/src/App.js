@@ -14,6 +14,7 @@ import User from './components/User'
 import { initializeUsers } from './reducers/userReducer'
 import Blog from './components/Blog'
 import './index.css'
+import { Container } from 'semantic-ui-react'
 
 const App = ({
   user,
@@ -85,41 +86,46 @@ const App = ({
 
   if (user === null) {
     return (
-      <div>
-        <Notification />
-        <LoginForm className='loginform'
-          username={omitReset(username)}
-          password={omitReset(password)}
+      <Container>
+        <div>
+          <Notification />
+          <LoginForm className='loginform'
+            username={omitReset(username)}
+            password={omitReset(password)}
 
-          handleSubmit={handleLogin}
-        />
-      </div>
+            handleSubmit={handleLogin}
+          />
+        </div>
+      </Container>
     )
   }
 
   return (
-    <div>
-      <Router>
-        <div className='menuStyle'>
-          <Link to="/">blogs</Link>{' '}
-          <Link to="/users">users</Link>
-          {' '}{user.username} logged in {' '}
+    <Container>
+      <div>
+        <Router>
+          <div className='menuStyle'>
+            <Link to="/">blogs</Link>{' '}
+            <Link to="/users">users</Link>
+            {' '}{user.username} logged in {' '}
+            <button onClick={handleLogout}>logout</button>
+          </div>
+          <h2>Blog app</h2>
+          <Notification />
+          <p>{user.username} logged in</p>
           <button onClick={handleLogout}>logout</button>
-        </div>
-        <h2>Blog app</h2>
-        <Notification />
-        <button onClick={handleLogout}>logout</button>
-        <Route exact path="/" render={() =>
-          <BlogList
-            notify={notify}
-          />}
-        />
-        <Route exact path="/users" render={({ match }) => <Users path={match.path} />} />
-        <Route path="/users/:id" render={({ match }) => <User user={userId(match.params.id)} />} />
-        <Route exact path="/blogs/:id" render={({ match }) => <Blog notify={notify} blog={blogId(match.params.id)} />} />
-        <Redirect to="/" />
-      </Router>
-    </div>
+          <Route exact path="/" render={() =>
+            <BlogList
+              notify={notify}
+            />}
+          />
+          <Route exact path="/users" render={({ match }) => <Users path={match.path} />} />
+          <Route path="/users/:id" render={({ match }) => <User user={userId(match.params.id)} />} />
+          <Route exact path="/blogs/:id" render={({ match }) => <Blog notify={notify} blog={blogId(match.params.id)} />} />
+          <Redirect to="/" />
+        </Router>
+      </div>
+    </Container>
   )
 }
 
