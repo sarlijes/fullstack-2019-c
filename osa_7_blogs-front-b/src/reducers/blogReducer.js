@@ -15,7 +15,7 @@ const reducer = (state = [], action) => {
       console.log('newState', newState)
       const newBlog = newState.find(blog => blog.id === action.data.blog)
       console.log('newBlog', newBlog)
-      newBlog.comments = newBlog.comments.concat({ text: action.data.text, id: action.data.id })
+      newBlog.comments = newBlog.comments.concat({ comment: action.data.comment, id: action.data.id })
       console.log('new comment', newBlog.comments)
       return [...newState.filter(blog => blog.id !== newBlog.id), newBlog]
     }
@@ -63,7 +63,7 @@ export const likeBlog = blog => {
 }
 
 export const addComment = (id, content) => {
-  const comment = { text: content }
+  const comment = { comment: content }
   console.log('addComment', comment)
   return async dispatch => {
     const addedComment = await blogService.addComment(id, comment)
