@@ -1,6 +1,7 @@
-post http://localhost:3003/api/blogs/5d88bfa210b75d368323d114/comments
+POST http://localhost:3003/api/blogs/5d9853c285c9cc1a795aa791/comments
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNpbW8iLCJpZCI6IjVjZTY2Mzk4NGE5M2YwMWVhNTlmYjc5NiIsImlhdCI6MTU1ODY4NzU5MH0.KIJC0g07e1iWk7DIVGp6QSqFK94VPTR1OczpW9o3OWw
 
 {
-	"content": "new comment #1"
+	"comment": "Uusi kommentti no3"
 }

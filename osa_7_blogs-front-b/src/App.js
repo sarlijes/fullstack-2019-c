@@ -106,9 +106,8 @@ const App = ({
           {' '}{user.username} logged in {' '}
           <button onClick={handleLogout}>logout</button>
         </div>
-        <h2>Blog App</h2>
+        <h2>Blog app</h2>
         <Notification />
-        <p>{user.username} logged in</p>
         <button onClick={handleLogout}>logout</button>
         <Route exact path="/" render={() =>
           <BlogList

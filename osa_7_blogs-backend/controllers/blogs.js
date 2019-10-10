@@ -2,10 +2,13 @@ const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
-    .find({}).populate('user', { username: 1, name: 1 })
+    .find({})
+    .populate('user', { username: 1, name: 1 })
+    .populate('comments', { comment: 1 })
 
   response.json(blogs.map(blog => blog.toJSON()))
 })
@@ -70,6 +73,25 @@ blogsRouter.put('/:id', async (request, response) => {
     const result = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
     response.status(200).json(result)
   }
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  console.log('body -->', blog)
+
+  if (!blog) {
+    return response.status(400).send({ error: 'no blog on that id' }).end()
+  }
+
+  const comment = new Comment(request.body)
+  comment.blog = blog._id
+  console.log('comment --->', comment)
+
+  const savedComment = await comment.save()
+  blog.comments = blog.comments.concat(savedComment._id)
+  await blog.save()
+
+  response.status(201).json(savedComment.toJSON())
 })
 
 module.exports = blogsRouter

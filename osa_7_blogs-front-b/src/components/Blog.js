@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import '../index.css'
+import Comments from './Comments'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
@@ -43,6 +44,7 @@ const Blog = ({ blog, user, notify, likeBlog, removeBlog }) => {
         <br /> added by {blog.author}
         <br /> <button style={buttonShow} onClick={remove}>remove</button>
       </div>
+      <Comments blog={blog} />
     </div>
   )
 }
