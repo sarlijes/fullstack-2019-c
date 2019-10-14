@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 const Authors = (props) => {
   if (!props.show) {
@@ -13,7 +13,7 @@ const Authors = (props) => {
 
   return (
     <div>
-      <h2>authors</h2>
+      <h2>authors lk</h2>
       <table>
         <tbody>
           <tr>
