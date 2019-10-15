@@ -23,6 +23,8 @@ const NewBook = (props) => {
       }
     })
 
+    console.log('title', title)
+
     setTitle('')
     setPublished('')
     setAuhtor('')
