@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-
 const SET_BORN_YEAR = gql`
 mutation editAuthor($name: String!, $setBornTo: String!) {
   editAuthor(name: $name, setBornTo: $setBornTo) {
@@ -50,7 +49,7 @@ const Authors = (props) => {
 
     console.log('name and bornDate', name, bornDate)
 
-    setName('')
+    setName(authors[0].name)
     setBornDate('')
   }
 
@@ -80,11 +79,15 @@ const Authors = (props) => {
       <form onSubmit={submit}>
         <h2>Set birthyear</h2>
         <div>
-        name
-        <input
+        <select
           value={name}
-          onChange={({ target }) => setName(target.value)}
-        />
+          onChange={({ target }) => setName(target.value)}>
+          {authors.map(author => {
+            return (
+              <option key={author.name} value={author.name}>{author.name}</option> 
+            )
+          })}
+        </select>
       </div>
       <div>
         born
