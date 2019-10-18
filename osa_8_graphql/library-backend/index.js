@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const uuid = require('uuid/v1')
 const mongoose = require('mongoose')
 const Author = require('./models/author')
@@ -66,14 +66,17 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       const { title, published, author, genres } = args
-      let authorId
       const authorDuplicate = await Author.findOne({ name: author })
       if (authorDuplicate) {
         authorId = authorDuplicate.id
       } else {
         const newAuthor = new Author({ name: author })
-        await newAuthor.save()
-        authorId = newAuthor.id
+        try {
+          await newAuthor.save()
+          authorId = newAuthor.id
+        } catch (error) {
+          throw new UserInputError(error.message, { invalidArgs: args })
+        }
       }
       const newBook = new Book({
         title,
@@ -81,23 +84,31 @@ const resolvers = {
         author: authorId,
         genres
       })
-      await newBook.save()
-      return Book.findById(newBook.id).populate('author')
+      try {
+        await newBook.save()
+        return Book.findById(newBook.id).populate('author')
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
     },
     editAuthor: async (root, args) => {
       const { name, setBornTo } = args
-      const filter = { 
-        name: name 
+      const filter = {
+        name: name
       }
-      const update = { 
-        born: setBornTo 
+      const update = {
+        born: setBornTo
       }
 
-      // see - https://mongoosejs.com/docs/tutorials/findoneandupdate.html
-      const updatedAuthor = await Author.findOneAndUpdate(filter, update, {
-        new: true
-      })
-      return updatedAuthor
+      try {
+        // see - https://mongoosejs.com/docs/tutorials/findoneandupdate.html
+        const updatedAuthor = await Author.findOneAndUpdate(filter, update, {
+          new: true
+        })
+        return updatedAuthor
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args })
+      }
     }
   }
 }
