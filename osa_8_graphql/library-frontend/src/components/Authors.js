@@ -1,31 +1,8 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/react-hooks'
-import { gql } from 'apollo-boost'
-
-const SET_BORN_YEAR = gql`
-mutation editAuthor($name: String!, $setBornTo: String!) {
-  editAuthor(name: $name, setBornTo: $setBornTo) {
-    name
-    born
-  } 
-}
-`
-const ALL_AUTHORS = gql`
-{
-  allAuthors {
-    name
-    born
-    bookCount
-  }
-}
-`
 
 const Authors = (props) => {
   const [name, setName] = useState('')
-  const [bornDate, setBornDate] = useState('')
-  const [editAuthor] = useMutation(SET_BORN_YEAR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
-  })
+  const [bornYear, setBornYear] = useState('')
 
   if (!props.show) {
     return null
@@ -40,17 +17,15 @@ const Authors = (props) => {
   const submit = async (e) => {
     e.preventDefault()
 
-    await editAuthor({
+    await props.editBorn({
       variables: {
         name: name,
-        setBornTo: bornDate
+        bornYear: bornYear
       }
     })
 
-    console.log('name and bornDate', name, bornDate)
-
     setName(authors[0].name)
-    setBornDate('')
+    setBornYear('')
   }
 
   return (
@@ -92,8 +67,8 @@ const Authors = (props) => {
       <div>
         born
         <input
-          value={bornDate}
-          onChange={({ target }) => setBornDate(target.value)}
+          value={bornYear}
+          onChange={({ target }) => setBornYear(parseInt(target.value, 10))}
         />
       </div>
       <button type='submit'>update author</button>

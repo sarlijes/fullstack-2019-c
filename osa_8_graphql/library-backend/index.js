@@ -84,14 +84,19 @@ const resolvers = {
       await newBook.save()
       return Book.findById(newBook.id).populate('author')
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(p => p.name === args.name)
-      if (!authors) {
-        return null
+    editAuthor: async (root, args) => {
+      const { name, setBornTo } = args
+      const filter = { 
+        name: name 
+      }
+      const update = { 
+        born: setBornTo 
       }
 
-      const updatedAuthor = { ...args, born: args.setBornTo }
-      authors = authors.map(p => p.name === args.name ? updatedAuthor : p)
+      // see - https://mongoosejs.com/docs/tutorials/findoneandupdate.html
+      const updatedAuthor = await Author.findOneAndUpdate(filter, update, {
+        new: true
+      })
       return updatedAuthor
     }
   }
