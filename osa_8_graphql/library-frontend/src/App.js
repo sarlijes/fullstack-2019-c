@@ -11,6 +11,7 @@ const ALL_AUTHORS = gql`
       name
       born
       bookCount
+      id
     }
   }
 `
@@ -19,24 +20,35 @@ const ALL_BOOKS = gql`
   {
     allBooks {
       title
-      author
+      author {
+        name
+        born
+        bookCount
+        id
+      }
       published
+      id
     }
   }
-  `
+`
 
 const ADD_BOOK = gql`
-  mutation addBook($title: String!, $published: String!, $author: String!, $genres: [String!]!) {
+  mutation addBook($title: String!, $published: Int!, $author: String!, $genres: [String!]!) {
     addBook(
-      title: $title,
-      published: $published,
-      author: $author,
+      title: $title
+      author: $author
+      published: $published
       genres: $genres
-    ){
+    ) {
       title
+      author {
+        name
+        born
+        id
+      }
       published
-      author
       genres
+      id
     }
   }
 `
@@ -45,7 +57,7 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
-  const [add] = useMutation(ADD_BOOK, {
+  const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS}]
   })
 
@@ -66,7 +78,7 @@ const App = () => {
       />
 
       <NewBook
-        show={page === 'add'} result={add}
+        show={page === 'add'} result={addBook}
       />
 
     </div>
