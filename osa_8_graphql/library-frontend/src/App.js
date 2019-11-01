@@ -17,19 +17,16 @@ const ALL_AUTHORS = gql`
 `
 
 const ALL_BOOKS = gql`
-  {
-    allBooks {
-      title
-      author {
-        name
-        born
-        bookCount
-        id
-      }
-      published
-      id
+query allBooks($genre: String) {
+  allBooks(genre: $genre) {
+    title
+    author {
+      name
     }
+    published
+    genres
   }
+}
 `
 
 const ADD_BOOK = gql`
