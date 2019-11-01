@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import Authors from './components/Authors'
@@ -18,15 +18,24 @@ const ALL_AUTHORS = gql`
 `
 
 const ALL_BOOKS = gql`
-  {
-    allBooks {
-      title
-      author {
-        name
-      }
-      published
+query allBooks($genre: String) {
+  allBooks(genre: $genre) {
+    title
+    author {
+      name
     }
+    published
+    genres
   }
+}
+`
+
+const ALL_GENRES = gql`
+{
+  allBooks {
+    genres
+  }
+}
 `
 
 const LOGIN = gql`
@@ -69,22 +78,34 @@ const EDIT_BORN = gql`
 `
 
 const App = () => {
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleError = (error) => {
-    setErrorMessage(error.graphQLErrors[0].message)
+    try{
+      setErrorMessage(error.graphQLErrors[0].message)
+    } catch (e) {
+      console.log('eroor',e)
+    }
     setTimeout(() => {
       setErrorMessage(null)
     }, 3000)
   }
+
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
+  const [genre, setGenre] = useState(null)
   const authors = useQuery(ALL_AUTHORS)
-  const books = useQuery(ALL_BOOKS, { onError: handleError })
+  const genres = useQuery(ALL_GENRES)
+
+  const books = useQuery(ALL_BOOKS, {
+    variables: { genre },
+    onError: handleError 
+  })
+
   const [editBorn] = useMutation(EDIT_BORN, { onError: handleError })
   const [addBook] = useMutation(ADD_BOOK, {
     onError: handleError,
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS, variables: { genre } },{ query: ALL_GENRES }]
   })
 
   const client = useApolloClient()
@@ -98,6 +119,10 @@ const App = () => {
     localStorage.clear()
     client.resetStore()
   }
+
+  useEffect(() => {
+    setToken(window.localStorage.getItem('library-user-token'))
+  }, [])
 
   const errorNotification = () => errorMessage &&
     <div style={{ color: 'red' }}>
@@ -118,7 +143,7 @@ const App = () => {
       {errorNotification()}
       <Authors show={page === 'authors'} editBorn={editBorn} result={authors} />
 
-      <Books show={page === 'books'} result={books} />
+      <Books show={page === 'books'} result={books} genres={genres} setGenre={genre => setGenre(genre)} />
 
       <NewBook show={page === 'add'} result={addBook} />
 

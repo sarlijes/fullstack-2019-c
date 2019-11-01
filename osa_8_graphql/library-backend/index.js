@@ -145,23 +145,25 @@ const resolvers = {
         throw new UserInputError(error.message, { invalidArgs: args })
       }
     },
-    editAuthor: async (root, args, { currentUser }) => {
-      const { name, setBornTo } = args
-      if (!currentUser) {
-        throw new AuthenticationError(
-          'User not legged in!',
-          {
-            invalidArgs: args
-          }
-        )
+    editAuthor: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError('not authenticated')
       }
 
-      const filter = { name }
-      const update = { born: setBornTo }
-      const updatedAuthor = await Author.findOneAndUpdate(filter, update, {
-        new: true
-      })
-      return updatedAuthor
+      const author = await Author.findOne({ name: args.name })
+      if (!author) return null
+      
+      author.name = args.name,
+      author.born = args.setBornTo
+
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return author
     },
     createUser: (root, args) => {
       const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
