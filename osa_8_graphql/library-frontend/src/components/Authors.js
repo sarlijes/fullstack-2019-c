@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 const Authors = (props) => {
   const [name, setName] = useState('')
   const [bornYear, setBornYear] = useState('')
+  const token = localStorage.getItem('library-user-token')
 
   if (!props.show) {
     return null
@@ -51,6 +52,8 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
+      {token &&
+      <div>
       <form onSubmit={submit}>
         <h2>Set birthyear</h2>
         <div>
@@ -73,6 +76,7 @@ const Authors = (props) => {
       </div>
       <button type='submit'>update author</button>
       </form>
+      </div>}
     </div>
   )
 }
