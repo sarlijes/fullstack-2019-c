@@ -1,36 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { gql } from 'apollo-boost'
+import queries from '../requests/queries'
 
-const BOOK_DETAILS = gql`
-fragment BookDetails on Book {
-  title
-  author {
-    name
-    born
-    bookCount
-  }
-  published
-  genres
-}
-`
-
-const ALL_BOOKS = gql`
-query allBooks($author: String, $genre: String) {
-  allBooks(author: $author, genre: $genre) {
-    ...BookDetails
-  }
-}
-${BOOK_DETAILS}
-`
-
-const ME = gql`
-query me {
-  me {
-    username
-    favoriteGenre
-  }
-}
-`
 
 const Recommend = props => {
   const [recommended, setRecommended] = useState([])
@@ -45,7 +15,7 @@ const Recommend = props => {
   useEffect(() => {
     const getUser = async () => {
       const response = await props.client.query({
-        query: ME,
+        query: queries.ME,
         fetchPolicy: 'no-cache'
       })
       setUser(response.data.me)
@@ -55,7 +25,7 @@ const Recommend = props => {
 
   const getBooks = async () => {
     const response = await props.client.query({
-      query: ALL_BOOKS,
+      query: queries.ALL_BOOKS,
       variables: { genre: user.favoriteGenre },
       fetchPolicy: 'no-cache'
     })

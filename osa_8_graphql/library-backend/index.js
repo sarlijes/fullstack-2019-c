@@ -11,7 +11,6 @@ const config = require('./utils/config')
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
-const JWT_SECRET = process.env.SECRET
 const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 
@@ -86,8 +85,14 @@ const resolvers = {
     me: (root, args, context) => {
       return context.currentUser
     },
-    authorCount: async () => Author.collection.countDocuments(),
-    bookCount: async () => Book.collection.countDocuments(),
+    authorCount: async () => {
+      return Author.collection.countDocuments()
+    },
+    // bookCount: async () => Book.collection.countDocuments(),
+    bookCount: async () => {
+      const books = await Book.find({})
+      return books.length
+    },
     allBooks: async (root, args) => {
       const books = await Book.find({}).populate('author')
       const byAuthor = book => book.author.name === args.author
@@ -104,7 +109,10 @@ const resolvers = {
         return books
       }
     },
-    allAuthors: async () => Author.find({})
+    allAuthors: async () => {
+      const authors = await Author.find({})
+      return authors
+    },
   },
   Author: {
     bookCount: async root => {
@@ -180,8 +188,8 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
-      console.log('login args', args.password)
-      console.log('login user', user)
+      // console.log('login args', args.password)
+      // console.log('login user', user)
 
       if (!user || args.password !== 'secret') {
         throw new UserInputError('wrong credentials')

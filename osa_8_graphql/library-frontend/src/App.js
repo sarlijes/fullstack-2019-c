@@ -1,105 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient, useSubscription, ApolloConsumer } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient, useSubscription } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommend from './components/Recommend'
 import { Subscription } from 'react-apollo'
-
-const BOOK_DETAILS = gql`
-fragment BookDetails on Book {
-  title
-  author {
-    name
-    born
-    bookCount
-  }
-  published
-  genres
-}
-`
-
-const ALL_BOOKS = gql`
-query allBooks($author: String, $genre: String) {
-  allBooks(author: $author, genre: $genre) {
-    ...BookDetails
-  }
-}
-${BOOK_DETAILS}
-`
-
-const ALL_AUTHORS = gql`
-  {
-    allAuthors {
-      name
-      born
-      bookCount
-      id
-    }
-  }
-`
-
-const ALL_GENRES = gql`
-{
-  allBooks {
-    genres
-  }
-}
-`
-
-const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password)  {
-      value
-    }
-  }
-`
-
-const ADD_BOOK = gql`
-  mutation addBook($title: String!, $published: Int!, $author: String!, $genres: [String!]!) {
-    addBook(
-      title: $title
-      author: $author
-      published: $published
-      genres: $genres
-    ) {
-      title
-      author {
-        name
-      }
-      published
-      genres
-      id
-    }
-  }
-`
-const EDIT_BORN = gql`
-  mutation editAuthor($name: String!, $bornYear: Int!) {
-    editAuthor(
-      name: $name, 
-      setBornTo: $bornYear) 
-      {
-      name
-      born
-      id
-    }
-  }
-`
-
-const BOOK_ADDED = gql`
-  subscription {
-    bookAdded {
-      title
-      published
-      author {
-        name
-      }
-      genres
-    }
-  }
-`
+import queries from './requests/queries'
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -109,7 +16,7 @@ const App = () => {
   const client = useApolloClient()
 
   useEffect(() => {
-    console.log('set token')
+    // console.log('set token')
     setToken(window.localStorage.getItem('library-user-token'))
   }, [])
 
@@ -124,29 +31,50 @@ const App = () => {
     }, 3000)
   }
 
-  const authors = useQuery(ALL_AUTHORS)
-  const genres = useQuery(ALL_GENRES)
+  const authors = useQuery( queries.ALL_AUTHORS)
+  const genres = useQuery(queries.ALL_GENRES)
 
-  const books = useQuery(ALL_BOOKS, {
+  const books = useQuery(queries.ALL_BOOKS, {
     variables: { genre },
     onError: handleError
   })
 
-  const [editBorn] = useMutation(EDIT_BORN, { onError: handleError })
+  const [editBorn] = useMutation(queries.EDIT_BORN, { onError: handleError })
 
-  useSubscription(BOOK_ADDED, {
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map(book => book.title).includes(object.title)
+
+    const dataInStore = client.readQuery({
+      query: queries.ALL_BOOKS,
+      variables: { genre }
+    })
+
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      dataInStore.allBooks.push(addedBook)
+      client.writeQuery({
+        query: queries.ALL_BOOKS,
+        data: dataInStore
+      })
+    }
+  }
+
+  useSubscription(queries.BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded
-      console.log(addedBook)
+      updateCacheWith(addedBook)
     }
   })
 
-  const [addBook] = useMutation(ADD_BOOK, {
+  const [addBook] = useMutation(queries.ADD_BOOK, {
     onError: handleError,
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS, variables: { genre } }, { query: ALL_GENRES }]
+    refetchQueries: [{ query: queries.ALL_AUTHORS }, { query: queries.ALL_BOOKS, variables: { genre } }, { query: queries.ALL_GENRES }],
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook)
+    }
   })
 
-  const [login] = useMutation(LOGIN, {
+  const [login] = useMutation(queries.LOGIN, {
     onError: handleError
   })
 
@@ -182,16 +110,12 @@ const App = () => {
 
       <NewBook show={page === 'add'} result={addBook} />
 
-      <ApolloConsumer>
-        {(client =>
-          <Recommend client={client} token={token} show={page === 'recommend'} />
-        )}
-      </ApolloConsumer>
+      <Recommend client={client} token={token} show={page === 'recommend'} />
 
       <LoginForm show={page === 'login'} setPage={setPage} login={login} setToken={token => setToken(token)} />
 
       <Subscription
-        subscription={BOOK_ADDED}
+        subscription={queries.BOOK_ADDED}
         onSubscriptionData={({ subscriptionData }) =>
           window.alert(`${subscriptionData.data.bookAdded.title} added`)
         }
