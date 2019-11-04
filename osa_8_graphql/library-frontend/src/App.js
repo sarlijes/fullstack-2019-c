@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient, ApolloConsumer } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
@@ -77,35 +77,18 @@ const EDIT_BORN = gql`
     }
   }
 `
-const USER = gql`
-  {
-    me {
-      username
-      favoriteGenre
-    }
-  }
-`
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
   const [genre, setGenre] = useState(null)
-  const [loggedUser, setLoggedUser] = useState(null)
   const client = useApolloClient()
 
   useEffect(() => {
     console.log('set token')
     setToken(window.localStorage.getItem('library-user-token'))
   }, [])
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await client.query({ query: USER })
-      console.log("useEffectin favoriteGenre:", data.me)
-      setLoggedUser(data.me)
-    })()
-  }, )
 
   const handleError = (error) => {
     try {
@@ -127,10 +110,9 @@ const App = () => {
   })
 
   const [editBorn] = useMutation(EDIT_BORN, { onError: handleError })
-
   const [addBook] = useMutation(ADD_BOOK, {
     onError: handleError,
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS, variables: { genre } }, { query: ALL_GENRES }]
   })
 
   const [login] = useMutation(LOGIN, {
@@ -169,7 +151,11 @@ const App = () => {
 
       <NewBook show={page === 'add'} result={addBook} />
 
-      <Recommend show={page === 'recommend'} user={loggedUser} result={books} />
+      <ApolloConsumer>
+        {(client =>
+          <Recommend client={client} token={token} show={page === 'recommend'} />
+        )}
+      </ApolloConsumer>
 
       <LoginForm show={page === 'login'} setPage={setPage} login={login} setToken={token => setToken(token)} />
     </div>

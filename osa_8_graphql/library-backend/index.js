@@ -87,14 +87,14 @@ const resolvers = {
     allBooks: async (root, args) => {
       const books = await Book.find({}).populate('author')
       const byAuthor = book => book.author.name === args.author
-      
+
       if (args.author && !args.genre) {
         return books.filter(byAuthor)
       } else if (!args.author && args.genre) {
-        const books = await Book.find({ genres: { $in: [args.genre]}})        
+        const books = await Book.find({ genres: { $in: [args.genre] } })
         return books
       } else if (args.author && args.genre) {
-        const books = await Book.find({ genres: { $in: [args.genre]}}).populate('author')
+        const books = await Book.find({ genres: { $in: [args.genre] } }).populate('author')
         return books.filter(byAuthor)
       } else {
         return books
@@ -110,7 +110,7 @@ const resolvers = {
   },
   Book: {
     author: async (root) => {
-      const author = await Author.findById(root.author)      
+      const author = await Author.findById(root.author)
       return {
         name: author.name,
         born: author.born
@@ -152,9 +152,9 @@ const resolvers = {
 
       const author = await Author.findOne({ name: args.name })
       if (!author) return null
-      
+
       author.name = args.name,
-      author.born = args.setBornTo
+        author.born = args.setBornTo
 
       try {
         await author.save()
@@ -174,7 +174,7 @@ const resolvers = {
       })
     },
     login: async (root, args) => {
-      const user = await User.findOne({ username: args.username})
+      const user = await User.findOne({ username: args.username })
       console.log('login args', args.password)
       console.log('login user', user)
 
@@ -187,7 +187,7 @@ const resolvers = {
         id: user._id
       }
 
-      return { value: jwt.sign(userForToken, JWT_SECRET) }
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     }
   }
 }
@@ -198,7 +198,7 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET
+      const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET
       )
 
       const currentUser = await User.findById(decodedToken.id).populate('books')
