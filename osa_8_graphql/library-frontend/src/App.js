@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient, ApolloConsumer } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient, useSubscription, ApolloConsumer } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommend from './components/Recommend'
+import { Subscription } from 'react-apollo'
+
+const BOOK_DETAILS = gql`
+fragment BookDetails on Book {
+  title
+  author {
+    name
+    born
+    bookCount
+  }
+  published
+  genres
+}
+`
+
+const ALL_BOOKS = gql`
+query allBooks($author: String, $genre: String) {
+  allBooks(author: $author, genre: $genre) {
+    ...BookDetails
+  }
+}
+${BOOK_DETAILS}
+`
 
 const ALL_AUTHORS = gql`
   {
@@ -16,19 +39,6 @@ const ALL_AUTHORS = gql`
       id
     }
   }
-`
-
-const ALL_BOOKS = gql`
-query allBooks($genre: String) {
-  allBooks(genre: $genre) {
-    title
-    author {
-      name
-    }
-    published
-    genres
-  }
-}
 `
 
 const ALL_GENRES = gql`
@@ -78,6 +88,19 @@ const EDIT_BORN = gql`
   }
 `
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      published
+      author {
+        name
+      }
+      genres
+    }
+  }
+`
+
 const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [token, setToken] = useState(null)
@@ -110,6 +133,14 @@ const App = () => {
   })
 
   const [editBorn] = useMutation(EDIT_BORN, { onError: handleError })
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      console.log(addedBook)
+    }
+  })
+
   const [addBook] = useMutation(ADD_BOOK, {
     onError: handleError,
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS, variables: { genre } }, { query: ALL_GENRES }]
@@ -158,6 +189,15 @@ const App = () => {
       </ApolloConsumer>
 
       <LoginForm show={page === 'login'} setPage={setPage} login={login} setToken={token => setToken(token)} />
+
+      <Subscription
+        subscription={BOOK_ADDED}
+        onSubscriptionData={({ subscriptionData }) =>
+          window.alert(`${subscriptionData.data.bookAdded.title} added`)
+        }
+      >
+        {() => null}
+      </Subscription>
     </div>
   )
 }

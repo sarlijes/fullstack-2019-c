@@ -131,21 +131,21 @@ const resolvers = {
         const newAuthor = new Author({ name: author })
         try {
           await newAuthor.save()
-          pubsub.publish('BOOK ADDED', { bookAdded: book })
           authorId = newAuthor.id
         } catch (error) {
           throw new UserInputError(error.message, { invalidArgs: args })
         }
       }
-      const newBook = new Book({
+      const book = new Book({
         title,
         published,
         author: authorId,
         genres
       })
       try {
-        await newBook.save()
-        return Book.findById(newBook.id).populate('author')
+        await book.save()
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+        return Book.findById(book.id).populate('author')
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args })
       }
@@ -197,7 +197,7 @@ const resolvers = {
   },
   Subscription: {
     bookAdded: {
-      subscribe: () => pubsub.asyncIterator(['BOOK ADDED'])
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
     }
   }
 }
